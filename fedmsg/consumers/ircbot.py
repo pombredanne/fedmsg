@@ -1,5 +1,6 @@
+# -*- coding; utf-8 -*-
 # This file is part of fedmsg.
-# Copyright (C) 2012 Red Hat, Inc.
+# Copyright (C) 2012 - 2014 Red Hat, Inc.
 #
 # fedmsg is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -16,12 +17,10 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 #
 # Authors:  Ralph Bean <rbean@redhat.com>
-#
-# -*- coding; utf-8 -*-
-# Author: Ryan Brown
-# Author: Ralph Bean
-# Description: A bot that takes a config and puts messages matching given
-# regexes in specified IRC channels
+#           Ryan Brown
+""" A bot that takes a config and puts messages matching given
+regexes in specified IRC channels.
+"""
 
 import fedmsg
 import fedmsg.encoding
@@ -34,10 +33,10 @@ import time
 import pygments
 import pygments.lexers
 import pygments.formatters
+import requests
 
 from fedmsg.consumers import FedmsgConsumer
 
-from twisted.words.protocols import irc
 from twisted.internet import protocol
 from twisted.internet import reactor
 from twisted.internet import defer
@@ -85,97 +84,107 @@ def ircprettify(title, subtitle, link="", config=None):
     return fmt.format(title=title, subtitle=subtitle, link=link)
 
 
-class FedMsngr(irc.IRCClient):
-    # The 0.6 seconds here is empircally guessed so we don't get dropped by
-    # freenode.  FIXME - this should be pulled from the config.
-    lineRate = 0.6
-    sourceURL = "http://github.com/fedora-infra/fedmsg"
+def make_irc_client(factory):
+    from twisted.words.protocols import irc
 
-    def __init__(self, *args, **kw):
-        super(FedMsgnr, self).__init__(*args, **kw)
+    class Fedmsg2IRCClient(irc.IRCClient):
+        # The 0.6 seconds here is empircally guessed so we don't get dropped by
+        # freenode.  FIXME - this should be pulled from the config.
+        lineRate = 1.0
+        sourceURL = "https://github.com/fedora-infra/fedmsg"
 
-    def _get_nickname(self):
-        return self.factory.nickname
-    nickname = property(_get_nickname)
+        def __init__(self, *args, **kwargs):
+            self._modecallback = {}
 
-    def __init__(self, *args, **kwargs):
-        self._modecallback = {}
+        def _get_nickname(self):
+            return self.factory.nickname
+        nickname = property(_get_nickname)
 
-    def signedOn(self):
-        self.join(self.factory.channel)
-        log.info("Signed on as %s." % (self.nickname,))
+        def signedOn(self):
+            self.join(self.factory.channel)
+            log.info("Signed on as %s." % (self.nickname,))
 
-    def joined(self, channel):
-        log.info("Joined %s." % (channel,))
-        self.factory.parent_consumer.add_irc_client(self)
+        def joined(self, channel):
+            log.info("Joined %s." % (channel,))
+            self.factory.parent_consumer.add_irc_client(self)
 
-        def got_modes(modelist):
-            modes = ''.join(modelist)
-            if 'c' in modes:
-                log.info("%s has +c is on. No prettiness" % channel)
-                self.factory.pretty = False
-        self.modes(channel).addCallback(got_modes)
+            def got_modes(modelist):
+                modes = ''.join(modelist)
+                if 'c' in modes:
+                    log.info("%s has +c is on. No prettiness" % channel)
+                    self.factory.pretty = False
+            self.modes(channel).addCallback(got_modes)
 
-    def modes(self, channel):
-        channel = channel.lower()
-        d = defer.Deferred()
-        if channel not in self._modecallback:
-            self._modecallback[channel] = ([], [])
-        self._modecallback[channel][0].append(d)
-        self.sendLine("MODE %s" % channel)
-        return d
+        def modes(self, channel):
+            channel = channel.lower()
+            d = defer.Deferred()
+            if channel not in self._modecallback:
+                self._modecallback[channel] = ([], [])
+            self._modecallback[channel][0].append(d)
+            self.sendLine("MODE %s" % channel)
+            return d
 
-    def irc_RPL_CHANNELMODEIS(self, prefix, params):
-        """ Handy reference for IRC mnemonics
-        www.irchelp.org/irchelp/rfc/chapter4.html#c4_2_3 """
-        channel = params[1].lower()
-        modes = params[2]
-        if channel not in self._modecallback:
-            return
-        n = self._modecallback[channel][1]
-        n.append(modes)
-        callbacks, modelist = self._modecallback[channel]
+        def irc_RPL_CHANNELMODEIS(self, prefix, params):
+            """ Handy reference for IRC mnemonics
+            www.irchelp.org/irchelp/rfc/chapter4.html#c4_2_3 """
+            channel = params[1].lower()
+            modes = params[2]
+            if channel not in self._modecallback:
+                return
+            n = self._modecallback[channel][1]
+            n.append(modes)
+            callbacks, modelist = self._modecallback[channel]
 
-        for cb in callbacks:
-            cb.callback(modelist)
-        del self._modecallback[channel]
+            for cb in callbacks:
+                cb.callback(modelist)
+            del self._modecallback[channel]
+
+    return Fedmsg2IRCClient(factory)
 
 
-class FedMsngrFactory(protocol.ClientFactory):
-    protocol = FedMsngr
+class Fedmsg2IRCFactory(protocol.ClientFactory):
+    protocol = make_irc_client
 
     def __init__(self, channel, nickname, filters,
-                 pretty, terse, parent_consumer):
+                 pretty, terse, short, parent_consumer):
         self.channel = channel
         self.nickname = nickname
         self.filters = filters
         self.pretty = pretty
         self.terse = terse
+        self.short = short
         self.parent_consumer = parent_consumer
         self.log = logging.getLogger("moksha.hub")
 
     def clientConnectionLost(self, connector, reason):
+        if self.parent_consumer.die:
+            self.log.info("Lost connection.  Not reconnecting to IRC.")
+            return
+
         self.log.warning("Lost connection (%s), reconnecting." % (reason,))
         self.parent_consumer.del_irc_clients(factory=self)
         connector.connect()
 
     def clientConnectionFailed(self, connector, reason):
-        self.log.error("Could not connect: %s" % (reason,))
+        if self.parent_consumer.die:
+            self.log.info("Failed connection.  Not reconnecting to IRC.")
+            return
+
+        self.log.error("Could not connect: %s, retry in 60s" % (reason,))
+        self.parent_consumer.del_irc_clients(factory=self)
+        reactor.callLater(60, connector.connect)
 
 
 class IRCBotConsumer(FedmsgConsumer):
     validate_signatures = False
     config_key = 'fedmsg.consumers.ircbot.enabled'
+    topic = '*'
 
     def __init__(self, hub):
         self.hub = hub
         self.DBSession = None
         self.irc_clients = []
-
-        # The consumer should pick up *all* messages.
-        self.topic = self.hub.config.get('topic_prefix', 'org.fedoraproject')
-        if not self.topic.endswith('*'):
-            self.topic += '*'
+        self.die = False
 
         super(IRCBotConsumer, self).__init__(hub)
         fedmsg.meta.make_processors(**hub.config)
@@ -198,12 +207,13 @@ class IRCBotConsumer(FedmsgConsumer):
             nickname = settings.get('nickname', "fedmsg-bot")
             pretty = settings.get('make_pretty', False)
             terse = settings.get('make_terse', False)
+            short = settings.get('make_short', False)
             timeout = settings.get('timeout', 120)
 
             filters = self.compile_filters(settings.get('filters', None))
 
-            factory = FedMsngrFactory(channel, nickname, filters,
-                                      pretty, terse, self)
+            factory = Fedmsg2IRCFactory(
+                channel, nickname, filters, pretty, terse, short, self)
             reactor.connectTCP(network, port, factory, timeout=timeout)
 
     def add_irc_client(self, client):
@@ -237,21 +247,35 @@ class IRCBotConsumer(FedmsgConsumer):
                 return False
         return True
 
-    def prettify(self, topic, msg, pretty=False, terse=False):
+    def prettify(self, topic, msg, pretty=False, terse=False, short=False):
         if terse:
             if pretty:
-                title = fedmsg.meta.msg2title(msg, **self.hub.config)
+                if (self.hub.config.get('validate_signatures') and
+                        not fedmsg.crypto.validate(msg, **self.hub.config)):
+                    # If we're validating signatures the message is invalid,
+                    # then be careful with it and don't pass it to fedmsg.meta.
+                    title = topic
+                    if 'signature' not in msg:
+                        subtitle = _("(unsigned)")
+                    else:
+                        subtitle = _("(invalid signature!)")
+                    link = None
+                else:
+                    # Otherwise, either we aren't validating signatures, or we
+                    # are and the message passed validation.
+                    title = fedmsg.meta.msg2title(msg, **self.hub.config)
+                    subtitle = fedmsg.meta.msg2subtitle(msg, **self.hub.config)
+                    link = fedmsg.meta.msg2link(msg, **self.hub.config)
 
-                if 'signature' not in msg:
-                    title += " " + _("(unsigned)")
-                elif self.hub.config.get('validate_signatures'):
-                    if not fedmsg.crypto.validate(msg, **self.hub.config):
-                        title += " " + _("(invalid signature!)")
+                if link and short:
+                    dagd = 'http://da.gd/s'
+                    resp = requests.get(dagd, params=dict(url=link))
+                    link = resp.text.strip()
 
                 return ircprettify(
                     title=title,
-                    subtitle=fedmsg.meta.msg2subtitle(msg, **self.hub.config),
-                    link=fedmsg.meta.msg2link(msg, **self.hub.config),
+                    subtitle=subtitle,
+                    link=link,
                     config=self.hub.config,
                 )
             else:
@@ -289,9 +313,17 @@ class IRCBotConsumer(FedmsgConsumer):
                     msg=body,
                     pretty=client.factory.pretty,
                     terse=client.factory.terse,
+                    short=client.factory.short,
                 )
-                raw_msg = raw_msg.encode('utf-8')
-                getattr(client, self.hub.config['irc_method'], 'notice')(
-                    client.factory.channel,
-                    raw_msg,
-                )
+                send = getattr(client, self.hub.config['irc_method'], 'notice')
+                send(client.factory.channel, raw_msg.encode('utf-8'))
+
+                backlog = self.incoming.qsize()
+                if backlog and (backlog % 20) == 0:
+                    warning = "* backlogged by %i messages" % backlog
+                    self.log.warning(warning)
+                    send(client.factory.channel, warning.encode('utf-8'))
+
+    def stop(self):
+        self.die = True  # Signal to not reconnect to IRC
+        super(IRCBotConsumer, self).stop()

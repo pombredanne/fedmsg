@@ -15,17 +15,17 @@ At present, many of the steps in this process require the maintainer to wait and
 watch for a previous step to complete.  For instance once a branch of a
 package is successfully built in koji, the maintainer must `submit their
 update to bodhi
-<http://fedoraproject.org/wiki/PackageMaintainers/UpdatingPackageHowTo#Submit_your_update_to_Bodhi>`_
+<https://fedoraproject.org/wiki/PackageMaintainers/UpdatingPackageHowTo#Submit_your_update_to_Bodhi>`_
 (See the `new package process
-<http://fedoraproject.org/wiki/New_package_process_for_existing_contributors>`_
+<https://fedoraproject.org/wiki/New_package_process_for_existing_contributors>`_
 for more details).
 
 Other progressions in the pipeline are automated.  For instance, `AutoQA
-<http://fedoraproject.org/wiki/AutoQA_architecture>`_ defines a `set of
+<https://fedoraproject.org/wiki/AutoQA_architecture>`_ defines a `set of
 watchers
-<http://git.fedorahosted.org/git/?p=autoqa.git;a=tree;f=watchers;h=af4f6d5e68e9dfcff938d0481ac65fa52bcd1d17;hb=HEAD>`_.
+<https://git.fedorahosted.org/git/?p=autoqa.git;a=tree;f=watchers;h=af4f6d5e68e9dfcff938d0481ac65fa52bcd1d17;hb=HEAD>`_.
 Most watchers are run as a cron task.  Each one looks for `certain events
-<http://git.fedorahosted.org/git/?p=autoqa.git;a=tree;f=events>`_ and fires off
+<https://git.fedorahosted.org/git/?p=autoqa.git;a=tree;f=events>`_ and fires off
 tests when appropriate.
 
 At LinuxFest Northwest (2009), jkeating gave `a talk
@@ -91,7 +91,7 @@ AMQP or "Broker?  Damn near killed 'er!"
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 When discussions on the `Fedora Messaging SIG
-<http://fedoraproject.org/wiki/Messaging_SIG>`_ began, AMQP was the choice by
+<https://fedoraproject.org/wiki/Messaging_SIG>`_ began, AMQP was the choice by
 default.  Since then members of the SIG have become attracted to an alternative
 messaging interface called `0mq <http://www.zeromq.org>`_.
 
@@ -143,7 +143,7 @@ connect to that port to begin consuming messages.  Without a central broker
 doing `all the things
 <http://www.imatix.com/articles:whats-wrong-with-amqp>`_, 0mq can afford a high
 throughput.  For instance, in initial tests of a 0mq-enabled `moksha hub
-<http://moksha.fedorahosted.org>`_, the Fedora Engineering Team achieved a
+<https://moksha.fedorahosted.org>`_, the Fedora Engineering Team achieved a
 100-fold speedup over AMQP.
 
 Service discovery
@@ -233,12 +233,13 @@ The scheme
 
 Event topics will follow the rule::
 
- org.fedoraproject.ENV.SERVICE.OBJECT[.SUBOBJECT].EVENT
+ org.fedoraproject.ENV.CATEGORY.OBJECT[.SUBOBJECT].EVENT
 
 Where:
 
  - ``ENV`` is one of `dev`, `stg`, or `production`.
- - ``SERVICE`` is something like `koji`, `bodhi`, or `fedoratagger`
+ - ``CATEGORY`` is the name of the service emitting the message -- something
+   like `koji`, `bodhi`, or `fedoratagger`
  - ``OBJECT`` is something like `package`, `user`, or `tag`
  - ``SUBOBJECT`` is something like `owner` or `build` (in the case where
    ``OBJECT`` is `package`, for instance)
@@ -249,3 +250,20 @@ All 'fields' in a topic **should**:
  - Be `singular` (Use `package`, not `packages`)
  - Use existing fields as much as possible (since `complete` is already used
    by other topics, use that instead of using `finished`).
+
+**Furthermore**, the *body* of messages will contain the following envelope:
+
+- A ``topic`` field indicating the topic of the message.
+- A ``timestamp`` indicating the seconds since the epoch when the message was
+  published.
+- A ``msg_id`` bearing a unique value distinguishing the message.  It is
+  typically of the form <YEAR>-<UUID>.  These can be used to uniquely query for
+  messages in the datagrepper web services.
+- A ``crypto`` field indicating if the message is signed with the ``X509``
+  method or the ``gpg`` method.
+- A ``i`` field indicating the sequence of the message if it comes from a
+  permanent service.
+- A ``username`` field indicating the username of the process that published
+  the message (sometimes, ``apache`` or ``fedmsg`` or something else).
+- Lastly, the application-specific body of the message will be contained in a
+  nested ``msg`` dictionary.

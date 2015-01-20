@@ -29,10 +29,6 @@ import os
 # import Cloud
 import cloud_sptheme as csp
 
-from fedmsg.doc_utilities import make_topics_doc
-here = os.path.dirname(os.path.abspath(__file__))
-make_topics_doc(here)
-
 # ... some contents omitted ...
 
 # set the html theme
@@ -53,7 +49,7 @@ html_theme_options = {
     # Style it like Fedora..
     "bodyfont":         "Cantarell",
 
-    "highlightcolor":   "#060",  # First Green
+    "highlightcolor":   "#4FAF4F",
 
     "sidebarbgcolor":   "#FEFEFE",
     "sidebartrimcolor": "#FEFEFE",
@@ -100,7 +96,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Fedora Messaging'
-copyright = u'2012 Red Hat, Inc. and others.'
+copyright = u'2012 - 2014 Red Hat, Inc. and others.'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

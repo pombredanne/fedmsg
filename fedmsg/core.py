@@ -1,5 +1,5 @@
 # This file is part of fedmsg.
-# Copyright (C) 2012 Red Hat, Inc.
+# Copyright (C) 2012 - 2014 Red Hat, Inc.
 #
 # fedmsg is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -22,6 +22,7 @@ import getpass
 import socket
 import threading
 import datetime
+import six
 import time
 import uuid
 import warnings
@@ -38,6 +39,7 @@ from fedmsg.utils import (
     set_high_water_mark,
     guess_calling_module,
     set_tcp_keepalive,
+    set_tcp_reconnect,
 )
 
 from fedmsg.replay import check_for_replay
@@ -61,8 +63,9 @@ class FedMsgContext(object):
         method = ['bind', 'connect'][config['active']]
 
         # If no name is provided, use the calling module's __name__ to decide
-        # which publishing endpoint to use.
-        if not config.get("name", None):
+        # which publishing endpoint to use (unless active=True, in which case
+        # we use "relay_inbound" as set in the subsequent code block).
+        if not config.get("name", None) and not config.get('active', False):
             module_name = guess_calling_module(default="fedmsg")
             config["name"] = module_name + '.' + self.hostname
 
@@ -73,12 +76,14 @@ class FedMsgContext(object):
         # relay_inbound address, but in the special case that we want to emit
         # our messages there, we add it to the :term:`endpoints` dict so that
         # the code below where we "Actually set up our publisher" can be
-        # simplified.  See Issue #37 - http://bit.ly/KN6dEK
+        # simplified.  See Issue #37 - https://bit.ly/KN6dEK
         if config.get('active', False):
-            # If the user has called us with "active=True" then presumably they
-            # have given us a "name" as well.
-            name = config.get("name", "relay_inbound")
-            config['endpoints'][name] = config[name]
+            try:
+                name = config['name'] = config.get("name", "relay_inbound")
+                config['endpoints'][name] = config[name]
+            except KeyError:
+                raise KeyError("Could not find endpoint for fedmsg-relay."
+                              " Try installing fedmsg-relay.")
 
         # Actually set up our publisher
         if (
@@ -146,7 +151,7 @@ class FedMsgContext(object):
                 "fedmsg is not configured to send any messages "
                 "for name %r" % config.get("name", None))
 
-        # Cleanup.  See http://bit.ly/SaGeOr for discussion.
+        # Cleanup.  See https://bit.ly/SaGeOr for discussion.
         weakref.ref(threading.current_thread(), self.destroy)
 
         # Sleep just to make sure that the socket gets set up before anyone
@@ -169,7 +174,7 @@ class FedMsgContext(object):
 
         return self.publish(topic, msg, modname)
 
-    def publish(self, topic=None, msg=None, modname=None):
+    def publish(self, topic=None, msg=None, modname=None, **kw):
         """ Send a message over the publishing zeromq socket.
 
           >>> import fedmsg
@@ -201,7 +206,7 @@ class FedMsgContext(object):
         **An example from Fedora Tagger -- SQLAlchemy encoding**
 
         Here's an example from
-        `fedora-tagger <http://github.com/fedora-infra/fedora-tagger>`_ that
+        `fedora-tagger <https://github.com/fedora-infra/fedora-tagger>`_ that
         sends the information about a new tag over
         ``org.fedoraproject.{dev,stg,prod}.fedoratagger.tag.update``::
 
@@ -249,14 +254,14 @@ class FedMsgContext(object):
                 topic,
             ])
 
-        if type(topic) == unicode:
+        if isinstance(topic, six.text_type):
             topic = to_bytes(topic, encoding='utf8', nonstring="passthru")
 
         year = datetime.datetime.now().year
 
         self._i += 1
         msg = dict(
-            topic=topic,
+            topic=topic.decode('utf-8'),
             msg=msg,
             timestamp=int(time.time()),
             msg_id=str(year) + '-' + str(uuid.uuid4()),
@@ -288,7 +293,7 @@ class FedMsgContext(object):
             msg = store.add(msg)
 
         self.publisher.send_multipart(
-            [topic, fedmsg.encoding.dumps(msg)],
+            [topic, fedmsg.encoding.dumps(msg).encode('utf-8')],
             flags=zmq.NOBLOCK,
         )
 
@@ -311,6 +316,13 @@ class FedMsgContext(object):
         subs = {}
         watched_names = {}
         for _name, endpoint_list in self.c['endpoints'].iteritems():
+
+            # You never want to actually subscribe to this thing, but sometimes
+            # it appears in the endpoints list due to a hack where it gets
+            # added in __init__ above.
+            if _name == 'relay_inbound':
+                continue
+
             # Listify endpoint_list in case it is a single string
             endpoint_list = iterate(endpoint_list)
             for endpoint in endpoint_list:
@@ -334,6 +346,7 @@ class FedMsgContext(object):
 
                 set_high_water_mark(subscriber, self.c)
                 set_tcp_keepalive(subscriber, self.c)
+                set_tcp_reconnect(subscriber, self.c)
 
                 getattr(subscriber, method)(endpoint)
                 subs[subscriber] = (_name, endpoint)

@@ -1,5 +1,5 @@
 # This file is part of fedmsg.
-# Copyright (C) 2012 Red Hat, Inc.
+# Copyright (C) 2012 - 2014 Red Hat, Inc.
 #
 # fedmsg is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -50,15 +50,24 @@ End users can have multiple plugin sets installed simultaneously.
 
 """
 
+import arrow
+import six
+
 # gettext is used for internationalization.  I have tested that it can produce
 # the correct files, but I haven't submitted it to anyone for translation.
 import gettext
 t = gettext.translation('fedmsg', 'locale', fallback=True)
-_ = t.ugettext
+
+if six.PY3:
+    _ = t.gettext
+else:
+    _ = t.ugettext
+
 
 from fedmsg.meta.default import DefaultProcessor
 
 import logging
+log = logging.getLogger("fedmsg")
 
 
 class ProcessorsNotInitialized(Exception):
@@ -90,12 +99,18 @@ def make_processors(**config):
         try:
             processors.append(processor.load()(_, **config))
         except Exception as e:
-            log = logging.getLogger("fedmsg")
             log.warn("Failed to load %r processor." % processor.name)
-            log.warn(str(e))
+            log.exception(e)
 
     # This should always be last
     processors.append(DefaultProcessor(_, **config))
+
+    # By default we have three builtin processors:  Default, Logger, and
+    # Announce.  If these are the only three, then we didn't find any
+    # externally provided ones.  calls to msg2subtitle and msg2link likely will
+    # not work the way the user is expecting.
+    if len(processors) == 3:
+        log.warn("No fedmsg.meta plugins found.  fedmsg.meta.msg2* crippled")
 
 
 def msg2processor(msg, **config):
@@ -142,7 +157,48 @@ def with_processor():
     return _wrapper
 
 
-@legacy_condition(unicode)
+def conglomerate(messages, **config):
+    """ Return a list of messages with some of them grouped into conglomerate
+    messages.  Conglomerate messages represent several other messages.
+
+    For example, you might pass this function a list of 40 messages.
+    38 of those are git.commit messages, 1 is a bodhi.update message, and 1 is
+    a badge.award message.  This function could return a list of three
+    messages, one representing the 38 git commit messages, one representing the
+    bodhi.update message, and one representing the badge.award message.
+
+    Functionality is provided by fedmsg.meta plugins on a "best effort" basis.
+    """
+
+    # First, give every registered processor a chance to do its work
+    for processor in processors:
+        messages = processor.conglomerate(messages, **config)
+
+    # Then, just fake it for every other ungrouped message.
+    for i, message in enumerate(messages):
+        # If these were successfully grouped, then skip
+        if 'msg_ids' in message:
+            continue
+
+        # For ungrouped ones, replace them with a fake conglomerate
+        messages[i] = {
+            'subtitle': msg2subtitle(message, **config),
+            'link': msg2link(message, **config),
+            'icon': msg2icon(message, **config),
+            'secondary_icon': msg2secondary_icon(message, **config),
+            'start_time': message['timestamp'],
+            'end_time': message['timestamp'],
+            'timestamp': message['timestamp'],
+            'human_time': arrow.get(message['timestamp']).humanize(),
+            'usernames': msg2usernames(message, **config),
+            'packages': msg2packages(message, **config),
+            'msg_ids': [message['msg_id']],
+        }
+
+    return messages
+
+
+@legacy_condition(six.text_type)
 @with_processor()
 def msg2repr(msg, processor, **config):
     """ Return a human-readable or "natural language" representation of a
@@ -157,35 +213,49 @@ def msg2repr(msg, processor, **config):
     return fmt.format(**locals())
 
 
-@legacy_condition(unicode)
+@legacy_condition(six.text_type)
 @with_processor()
 def msg2title(msg, processor, **config):
     """ Return a 'title' or primary text associated with a message. """
     return processor.title(msg, **config)
 
 
-@legacy_condition(unicode)
+@legacy_condition(six.text_type)
 @with_processor()
 def msg2subtitle(msg, processor, **config):
     """ Return a 'subtitle' or secondary text associated with a message. """
     return processor.subtitle(msg, **config)
 
 
-@legacy_condition(unicode)
+@legacy_condition(six.text_type)
+@with_processor()
+def msg2long_form(msg, processor, **config):
+    """ Return a 'long form' text representation of a message.
+
+    For most message, this will just default to the terse subtitle, but for
+    some messages a long paragraph-structured block of text may be returned.
+    """
+    result = processor.long_form(msg, **config)
+    if not result:
+        result = processor.subtitle(msg, **config)
+    return result
+
+
+@legacy_condition(six.text_type)
 @with_processor()
 def msg2link(msg, processor, **config):
     """ Return a URL associated with a message. """
     return processor.link(msg, **config)
 
 
-@legacy_condition(unicode)
+@legacy_condition(six.text_type)
 @with_processor()
 def msg2icon(msg, processor, **config):
     """ Return a primary icon associated with a message. """
     return processor.icon(msg, **config)
 
 
-@legacy_condition(unicode)
+@legacy_condition(six.text_type)
 @with_processor()
 def msg2secondary_icon(msg, processor, **config):
     """ Return a secondary icon associated with a message. """

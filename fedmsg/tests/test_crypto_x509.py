@@ -1,5 +1,5 @@
 # This file is part of fedmsg.
-# Copyright (C) 2012 Red Hat, Inc.
+# Copyright (C) 2012 - 2014 Red Hat, Inc.
 #
 # fedmsg is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -19,13 +19,16 @@
 #
 import os
 import shutil
+import six
+import sys
 
 import nose.tools.nontrivial
 
-try:
+major, minor = sys.version_info[:2]
+if major == 2 and minor <= 6:
     # For python-2.6, so we can do skipTest
     import unittest2 as unittest
-except ImportError:
+else:
     import unittest
 
 import fedmsg.crypto
@@ -39,8 +42,8 @@ def skip_if_missing_libs(f):
         try:
             import M2Crypto
             import m2ext
-        except ImportError, e:
-            self.skipTest(str(e))
+        except ImportError as e:
+            self.skipTest(six.text_type(e))
 
         return f(self, *args, **kw)
 
@@ -97,6 +100,24 @@ class TestCryptoX509(unittest.TestCase):
         # space aliens read data off the wire and inject incorrect data
         signed['msg'] = "eve wuz here"
         assert not fedmsg.crypto.validate(signed, **self.config)
+
+    @skip_if_missing_libs
+    def test_signed_by_true(self):
+        """ Try to succeed at specific-signer validation. """
+        message = dict(topic='biz.bar', msg='awesome')
+        signed = fedmsg.crypto.sign(message, **self.config)
+        signer = "shell-app01.phx2.fedoraproject.org"
+        res = fedmsg.crypto.validate_signed_by(signed, signer, **self.config)
+        assert res
+
+    @skip_if_missing_libs
+    def test_signed_by_false(self):
+        """ Try to fail at specific-signer validation. """
+        message = dict(topic='biz.bar', msg='awesome')
+        signed = fedmsg.crypto.sign(message, **self.config)
+        signer = "shell-app02.phx2.fedoraproject.org"
+        res = fedmsg.crypto.validate_signed_by(signed, signer, **self.config)
+        assert not res
 
 
 if __name__ == '__main__':

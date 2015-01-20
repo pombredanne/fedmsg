@@ -1,5 +1,5 @@
 # This file is part of fedmsg.
-# Copyright (C) 2012 Red Hat, Inc.
+# Copyright (C) 2012 - 2014 Red Hat, Inc.
 #
 # fedmsg is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -47,13 +47,6 @@ try:
     import sqlalchemy.ext.declarative
 except ImportError:
     pass
-
-try:
-    # py2.7
-    from collections import OrderedDict
-except ImportError:
-    # py2.4, 2.5, 2.6
-    from ordereddict import OrderedDict
 
 import json
 import json.encoder

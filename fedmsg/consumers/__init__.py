@@ -1,5 +1,5 @@
 # This file is part of fedmsg.
-# Copyright (C) 2012 Red Hat, Inc.
+# Copyright (C) 2012 - 2014 Red Hat, Inc.
 #
 # fedmsg is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -17,13 +17,20 @@
 #
 # Authors:  Ralph Bean <rbean@redhat.com>
 #
+
 import inspect
-import fedmsg.crypto
-import moksha.hub.api.consumer
 import json
-
 import logging
+import os
+import psutil
+import requests
+import threading
+import time
 
+import moksha.hub.api.consumer
+
+import fedmsg.crypto
+import fedmsg.encoding
 from fedmsg.replay import check_for_replay
 
 
@@ -95,10 +102,100 @@ class FedmsgConsumer(moksha.hub.api.consumer.Consumer):
 
         if self.validate_signatures:
             self.validate_signatures = self.hub.config['validate_signatures']
+
         if hasattr(self, "replay_name"):
             self.name_to_seq_id = {}
             if self.replay_name in self.hub.config.get("replay_endpoints", {}):
                 self.name_to_seq_id[self.replay_name] = -1
+
+        # Check if we have a status file to see if we have a backlog or not.
+        # Create its directory if it doesn't exist.
+        self.status_directory = self.hub.config.get('status_directory')
+        self.status_filename, self.status_lock = None, None
+        if self.status_directory:
+
+            # Extract proc name and handle differences between py2.6 and py2.7
+            proc_name = current_proc().name
+            if callable(proc_name):
+                proc_name = proc_name()
+
+            self.status_filename = os.path.join(
+                self.status_directory, proc_name, type(self).__name__)
+
+            topmost_directory, _ = self.status_filename.rsplit('/', 1)
+            if not os.path.exists(topmost_directory):
+                os.makedirs(topmost_directory)
+
+        self.datagrepper_url = self.hub.config.get('datagrepper_url')
+        if self.status_filename and self.datagrepper_url:
+            # First, try to read in the status from a previous run and fire off
+            # a thread to set up our workload.
+            self.log.info("Backlog handling setup.  status: %r, url: %r" % (
+                self.status_filename, self.datagrepper_url))
+            self.status_lock = threading.Lock()
+            try:
+                with self.status_lock:
+                    with open(self.status_filename, 'r') as f:
+                        data = f.read()
+                moksha.hub.reactor.reactor.callInThread(self._backlog, data)
+            except IOError as e:
+                self.log.info(e)
+        else:
+            self.log.info("No backlog handling.  status: %r, url: %r" % (
+                self.status_filename, self.datagrepper_url))
+
+    def _backlog(self, data):
+        """Find all the datagrepper messages between 'then' and 'now'.
+
+        Put those on our work queue.
+
+        Should be called in a thread so as not to block the hub at startup.
+        """
+
+        try:
+            data = json.loads(data)
+        except ValueError as e:
+            self.log.info("Status contents are %r" % data)
+            self.log.exception(e)
+            self.log.info("Skipping backlog retrieval.")
+            return
+
+        last = data['message']['body']
+        if isinstance(last, basestring):
+            last = json.loads(last)
+
+        then = last['timestamp']
+        now = int(time.time())
+
+        retrieved = 0
+        for message in self.get_datagrepper_results(then, now):
+            if message['msg_id'] != last['msg_id']:
+                retrieved = retrieved + 1
+                self.incoming.put(dict(body=message, topic=message['topic']))
+            else:
+                self.log.warning("Already seen %r; Skipping." % last['msg_id'])
+
+        self.log.info("Retrieved %i messages from datagrepper." % retrieved)
+
+    def get_datagrepper_results(self, then, now):
+        def _make_query(page=1):
+            return requests.get(self.datagrepper_url, params=dict(
+                rows_per_page=100, page=page, start=then, end=now, order='asc'
+            )).json()
+
+        # Grab the first page of results
+        data = _make_query()
+        messages = data['raw_messages']
+
+        # Grab and smash subsequent pages if there are any
+        for page in range(1, data['pages'] + 1):
+            self.log.info("Retrieving datagrepper page %i of %i" % (
+                page, data['pages']))
+            data = _make_query(page=page)
+
+            for message in data['raw_messages']:
+                if message['topic'].startswith(self.topic[:-1]):
+                    yield message
 
     def validate(self, message):
         """ This needs to raise an exception, caught by moksha. """
@@ -133,8 +230,37 @@ class FedmsgConsumer(moksha.hub.api.consumer.Consumer):
 
                 try:
                     self.validate(m)
-                    self.consume(m)
+                    super(FedmsgConsumer, self)._consume(m)
                 except RuntimeWarning as e:
                     self.log.warn("Received invalid message {}".format(e))
         else:
-            self.consume(message)
+            super(FedmsgConsumer, self)._consume(message)
+
+    def pre_consume(self, message):
+        self.save_status(dict(
+            message=message,
+            status='pre',
+        ))
+
+    def post_consume(self, message):
+        self.save_status(dict(
+            message=message,
+            status='post',
+        ))
+
+    def save_status(self, data):
+        if self.status_filename and self.status_lock:
+            with self.status_lock:
+                with open(self.status_filename, 'w') as f:
+                    f.write(fedmsg.encoding.dumps(data))
+
+
+def current_proc():
+    mypid = os.getpid()
+
+    for proc in psutil.process_iter():
+        if proc.pid == mypid:
+            return proc
+
+    # This should be impossible.
+    raise ValueError("Could not find process %r" % mypid)

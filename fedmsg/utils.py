@@ -1,5 +1,5 @@
 # This file is part of fedmsg.
-# Copyright (C) 2012 Red Hat, Inc.
+# Copyright (C) 2012 - 2014 Red Hat, Inc.
 #
 # fedmsg is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -18,17 +18,16 @@
 # Authors:  Ralph Bean <rbean@redhat.com>
 #
 
+import six
 import zmq
 import logging
 import inspect
+import subprocess
 
 try:
     from collections import OrderedDict
 except ImportError:
     from ordereddict import OrderedDict
-
-
-_log = logging.getLogger('fedmsg')
 
 
 def set_high_water_mark(socket, config):
@@ -87,7 +86,35 @@ def set_tcp_keepalive(socket, config):
         if key in config:
             attr = getattr(zmq, const, None)
             if attr:
-                _log.debug("Setting %r %r" % (const, config[key]))
+                socket.setsockopt(attr, config[key])
+
+
+def set_tcp_reconnect(socket, config):
+    """ Set a series of TCP reconnect options on the socket if
+    and only if
+      1) they are specified explicitly in the config and
+      2) the version of pyzmq has been compiled with support
+
+    Once our fedmsg bus grew to include many hundreds of endpoints, we started
+    notices a *lot* of SYN-ACKs in the logs.  By default, if an endpoint is
+    unavailable, zeromq will attempt to reconnect every 100ms until it gets a
+    connection.  With this code, you can reconfigure that to back off
+    exponentially to some max delay (like 1000ms) to reduce reconnect storm
+    spam.
+
+    See the following
+      - http://api.zeromq.org/3-2:zmq-setsockopt
+    """
+
+    reconnect_options = {
+        # Map fedmsg config keys to zeromq socket constants
+        'zmq_reconnect_ivl': 'RECONNECT_IVL',
+        'zmq_reconnect_ivl_max': 'RECONNECT_IVL_MAX',
+    }
+    for key, const in reconnect_options.items():
+        if key in config:
+            attr = getattr(zmq, const, None)
+            if attr:
                 socket.setsockopt(attr, config[key])
 
 
@@ -99,7 +126,7 @@ def load_class(location):
     tokens = mod_name.split('.')
 
     fromlist = '[]'
-    if tokens > 1:
+    if len(tokens) > 1:
         fromlist = '.'.join(tokens[:-1])
 
     module = __import__(mod_name, fromlist=fromlist)
@@ -133,6 +160,9 @@ def dict_query(dic, query):
 
     """
 
+    if not isinstance(query, six.string_types):
+        raise ValueError("query must be a string, not %r" % type(query))
+
     def _browse(tokens, d):
         """ Recurse through a dict to retrieve a value. """
         current, rest = tokens[0], tokens[1:]
@@ -152,3 +182,13 @@ def dict_query(dic, query):
     return OrderedDict([
         ('.'.join(tokens), _browse(tokens, dic)) for tokens in keys
     ])
+
+def cowsay_output(message):
+    """ Invoke a shell command to print cowsay output. Primary replacement for
+    os.system calls.
+    """
+    command = 'cowsay "%s"' % message
+    ret = subprocess.Popen(command, shell=True, stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE, stderr=subprocess.PIPE, close_fds=True)
+    output, error = ret.communicate()
+    return output, error

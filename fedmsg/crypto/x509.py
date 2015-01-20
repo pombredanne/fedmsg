@@ -1,5 +1,5 @@
 # This file is part of fedmsg.
-# Copyright (C) 2012 Red Hat, Inc.
+# Copyright (C) 2012 - 2014 Red Hat, Inc.
 #
 # fedmsg is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -36,7 +36,7 @@ try:
     # https://bugzilla.osafoundation.org/show_bug.cgi?id=11690
     import m2ext
     disabled = False
-except ImportError, e:
+except ImportError as e:
     logging.basicConfig()
     log.warn("Crypto disabled %r" % e)
     disabled = True
@@ -62,7 +62,7 @@ def sign(message, ssldir=None, certname=None, **config):
 
     certificate = M2Crypto.X509.load_cert(
         "%s/%s.crt" % (ssldir, certname)).as_pem()
-    # FIXME ? -- Opening this file requires elevated privileges in stg/prod.
+    # Opening this file requires elevated privileges in stg/prod.
     rsa_private = M2Crypto.RSA.load_key(
         "%s/%s.key" % (ssldir, certname))
 
@@ -157,7 +157,16 @@ def validate(message, ssldir=None, **config):
                        for line in crl.as_text().split('\n')
                        if 'Serial Number:' in line]
     if cert.get_serial_number() in revoked_serials:
-        return fail("X509 certificate is in the Revocation List (CRL)")
+        subject = cert.get_subject()
+
+        signer = '(no CN)'
+        if subject.nid.get('CN'):
+            entry = subject.get_entries_by_nid(subject.nid['CN'])[0]
+            if entry:
+                signer = entry.get_data().as_text()
+
+        return fail("X509 cert %r, %r is in the Revocation List (CRL)" % (
+            signer, cert.get_serial_number()))
 
     # If the cert is good, then test to see if the signature in the messages
     # matches up with the provided cert.

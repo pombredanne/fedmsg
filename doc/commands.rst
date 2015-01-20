@@ -17,6 +17,11 @@ fedmsg-tail
 
 .. autofunction:: fedmsg.commands.tail.tail
 
+fedmsg-dg-replay
+~~~~~~~~~~~~~~~~
+
+.. autofunction:: fedmsg.commands.replay.replay
+
 fedmsg-collectd
 ~~~~~~~~~~~~~~~
 
@@ -36,10 +41,6 @@ fedmsg-relay
 fedmsg-irc
 ~~~~~~~~~~
 .. autofunction:: fedmsg.commands.ircbot.ircbot
-
-fedmsg-tweet
-~~~~~~~~~~~~
-.. autofunction:: fedmsg.commands.tweet.tweet
 
 fedmsg-gateway
 ~~~~~~~~~~~~~~

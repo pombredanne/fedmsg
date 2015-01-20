@@ -1,5 +1,5 @@
 # This file is part of fedmsg.
-# Copyright (C) 2012 Red Hat, Inc.
+# Copyright (C) 2012 - 2014 Red Hat, Inc.
 #
 # fedmsg is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -155,8 +155,8 @@ log = logging.getLogger(__name__)
 _implementation = None
 _validate_implementations = None
 
-import gpg
-import x509
+from . import gpg
+from . import x509
 
 _possible_backends = {
     'gpg': gpg,
@@ -246,6 +246,21 @@ def validate(message, **config):
     else:
         log.warn("Crypto backend %r is disallowed" % backend)
         return False
+
+
+def validate_signed_by(message, signer, **config):
+    """ Validate that a message was signed by a particular certificate.
+
+    This works much like ``validate(...)``, but additionally accepts a
+    ``signer`` argument.  It will reject a message for any of the regular
+    circumstances, but will also reject it if its not signed by a cert with the
+    argued name.
+    """
+
+    config = copy.deepcopy(config)
+    config['routing_nitpicky'] = True
+    config['routing_policy'] = {message['topic']: [signer]}
+    return validate(message, **config)
 
 
 def strip_credentials(message):

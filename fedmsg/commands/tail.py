@@ -1,5 +1,5 @@
 # This file is part of fedmsg.
-# Copyright (C) 2012 Red Hat, Inc.
+# Copyright (C) 2012 - 2014 Red Hat, Inc.
 #
 # fedmsg is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -30,6 +30,7 @@ import fedmsg
 import fedmsg.encoding
 import fedmsg.meta
 from fedmsg.commands import BaseCommand
+from fedmsg.utils import cowsay_output
 
 
 class TailCommand(BaseCommand):
@@ -57,6 +58,12 @@ class TailCommand(BaseCommand):
         (['--really-pretty'], {
             'dest': 'really_pretty',
             'help': 'Extra-pretty print the JSON messages.',
+            'default': False,
+            'action': 'store_true',
+        }),
+        (['--cowsay'], {
+            'dest': 'cowsay',
+            'help': 'Print cowsay output of messages',
             'default': False,
             'action': 'store_true',
         }),
@@ -110,7 +117,6 @@ class TailCommand(BaseCommand):
         self.config['mute'] = True
 
         fedmsg.init(**self.config)
-        fedmsg.meta.make_processors(**self.config)
 
         # Build a message formatter
         formatter = lambda d: d
@@ -138,6 +144,14 @@ class TailCommand(BaseCommand):
         if self.config['terse']:
             formatter = lambda d: "\n" + fedmsg.meta.msg2repr(d, **self.config)
 
+        if self.config['cowsay']:
+            def formatter(d):
+                result, error = cowsay_output(fedmsg.meta.msg2subtitle(d, **self.config))
+                if not error:
+                    return "\n" + result
+                else:
+                    return "\n" + error
+
         # Build regular expressions for use in our loop.
         exclusive_regexp = re.compile(self.config['exclusive_regexp'])
         inclusive_regexp = re.compile(self.config['inclusive_regexp'])
@@ -148,6 +162,10 @@ class TailCommand(BaseCommand):
             users = set(map(str.strip, self.config['users'].split(',')))
         if self.config['packages']:
             packages = set(map(str.strip, self.config['packages'].split(',')))
+
+        # Only initialize this if we have to
+        if users or packages or self.config['terse'] or self.config['cowsay']:
+            fedmsg.meta.make_processors(**self.config)
 
         # Spin up a zmq.Poller and yield messages
         for name, ep, topic, message in fedmsg.tail_messages(**self.config):

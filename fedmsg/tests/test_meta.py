@@ -1,5 +1,5 @@
 # This file is part of fedmsg.
-# Copyright (C) 2012 Red Hat, Inc.
+# Copyright (C) 2012 - 2014 Red Hat, Inc.
 #
 # fedmsg is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -21,6 +21,7 @@
 
 import os
 import unittest
+import textwrap
 
 from nose import SkipTest
 from nose.tools import eq_
@@ -32,8 +33,6 @@ except ImportError:
     from nose.tools import make_decorator
 
 import fedmsg.meta
-
-from common import load_config
 
 
 def skip_on(attributes):
@@ -51,10 +50,101 @@ def skip_on(attributes):
     return wrapper
 
 
+def skip_if_fedmsg_meta_FI_is_present(f):
+    """ A test decorator that will skip if fedmsg_meta_fedora_infrastructure
+    is installed.
+
+    The presence of that module will screw up some tests.
+    """
+    def _wrapper(self, *args, **kw):
+        try:
+            import fedmsg_meta_fedora_infrastructure
+            raise SkipTest("fedmsg_meta_FI is present")
+        except ImportError:
+            pass
+
+        return f(self, *args, **kw)
+
+    return make_decorator(f)(_wrapper)
+
+
+class TestForWarning(unittest.TestCase):
+    def setUp(self):
+        dirname = os.path.abspath(os.path.dirname(__file__))
+        self.config = fedmsg.config.load_config(
+            filenames=[os.path.join(dirname, "fedmsg-test-config.py")],
+            invalidate_cache=True,
+        )
+        self.config['topic_prefix'] = 'org.fedoraproject'
+        self.config['topic_prefix_re'] = '^org\.fedoraproject\.(dev|stg|prod)'
+
+    @skip_if_fedmsg_meta_FI_is_present
+    def test_for_no_plugins(self):
+        """ Test that we print a warning if no plugin is installed """
+        messages = []
+
+        def mocked_warning(message):
+            messages.append(message)
+
+        expected = 'No fedmsg.meta plugins found.  fedmsg.meta.msg2* crippled'
+        original = fedmsg.meta.log.warn
+        try:
+            fedmsg.meta.log.warn = mocked_warning
+            fedmsg.meta.make_processors(**self.config)
+            eq_(messages, [expected])
+        finally:
+            fedmsg.meta.log.warn = original
+
+
+class TestProcessorRegex(unittest.TestCase):
+    def setUp(self):
+        dirname = os.path.abspath(os.path.dirname(__file__))
+        self.config = fedmsg.config.load_config(
+            filenames=[os.path.join(dirname, "fedmsg-test-config.py")],
+            invalidate_cache=True,
+        )
+        self.config['topic_prefix'] = 'org.fedoraproject'
+        self.config['topic_prefix_re'] = '^org\.fedoraproject\.(dev|stg|prod)'
+
+        class MyGitProcessor(fedmsg.meta.base.BaseProcessor):
+            __name__ = 'git'
+            __description__ = 'This processor handles git messages'
+            __link__ = 'http://fedmsg.com'
+            __docs__ = 'http://fedmsg.com'
+            __obj__ = 'git commits'
+
+        self.proc = MyGitProcessor(lambda x: x, **self.config)
+
+    def test_processor_handle_hit(self):
+        """ Test that a proc can handle what it should. """
+        fake_message = {
+            'topic': 'org.fedoraproject.dev.git.push',
+        }
+        result = self.proc.handle_msg(fake_message, **self.config)
+        assert result is not None, "Proc didn't say it could handle the message."
+
+    def test_processor_handle_miss(self):
+        """ Test that a proc says it won't handle what it shouldn't. """
+        fake_message = {
+            'topic': 'org.fedoraproject.dev.github.push',
+        }
+        result = self.proc.handle_msg(fake_message, **self.config)
+        assert result is None, "Proc falsely claimed it could handle the msg."
+
+    def test_processor_handle_empty_subtopic(self):
+        """Test that a processor will handle a message with an empty subtopic"""
+        fake_message = {
+            'topic': 'org.fedoraproject.dev.git',
+        }
+        result = self.proc.handle_msg(fake_message, **self.config)
+        assert result is "", "Proc said it couldn't handle the msg."
+
+
 class Base(unittest.TestCase):
     msg = None
     expected_title = None
     expected_subti = None
+    expected_markup = None
     expected_link = None
     expected_icon = None
     expected_secondary_icon = None
@@ -63,6 +153,7 @@ class Base(unittest.TestCase):
     expected_objects = None
     expected_emails = None
     expected_avatars = None
+    expected_long_form = None
 
     def setUp(self):
         dirname = os.path.abspath(os.path.dirname(__file__))
@@ -74,11 +165,29 @@ class Base(unittest.TestCase):
         self.config['topic_prefix_re'] = '^org\.fedoraproject\.(dev|stg|prod)'
         fedmsg.meta.make_processors(**self.config)
 
+        self.maxDiff = None
+        # Support fancy unittest py2.7 interface on older pythons
+        if not hasattr(self, 'assertMultiLineEqual'):
+            self.assertMultiLineEqual = self.assertEqual
+
     @skip_on(['msg', 'expected_title'])
     def test_title(self):
         """ Does fedmsg.meta produce the expected title? """
         actual_title = fedmsg.meta.msg2title(self.msg, **self.config)
         eq_(actual_title, self.expected_title)
+
+    @skip_on(['msg', 'expected_markup'])
+    def test_markup(self):
+        """ Does fedmsg.meta produce the right html when markup=True? """
+        actual_markup = fedmsg.meta.msg2subtitle(
+            self.msg, markup=True, **self.config)
+        eq_(actual_markup, self.expected_markup)
+
+    @skip_on(['msg', 'expected_long_form'])
+    def test_long_form(self):
+        """ Does fedmsg.meta produce the expected long form text? """
+        actual_long_form = fedmsg.meta.msg2long_form(self.msg, **self.config)
+        self.assertMultiLineEqual(actual_long_form, self.expected_long_form)
 
     @skip_on(['msg', 'expected_subti'])
     def test_subtitle(self):
@@ -146,6 +255,7 @@ class TestUnhandled(Base):
 class TestAnnouncement(Base):
     expected_title = "announce.announcement"
     expected_subti = 'hello, world.'
+    expected_long_form = 'hello, world.'
     expected_link = 'foo'
     expected_usernames = set(['ralph'])
 
@@ -163,7 +273,8 @@ class TestAnnouncement(Base):
 
 class TestLoggerNormal(Base):
     expected_title = "logger.log"
-    expected_subti = 'hello, world.'
+    expected_subti = 'hello, world. (ralph)'
+    expected_long_form = 'hello, world. (ralph)'
     expected_usernames = set(['ralph'])
 
     msg = {
@@ -179,7 +290,14 @@ class TestLoggerNormal(Base):
 
 class TestLoggerJSON(Base):
     expected_title = "logger.log"
-    expected_subti = '<custom JSON message>'
+    expected_subti = '<custom JSON message> (root)'
+    expected_long_form = textwrap.dedent("""
+    A custom JSON message was logged by root::
+
+        "msg": {
+            "foo": "bar"
+        }
+    """).strip()
     expected_usernames = set(['root'])
 
     msg = {
@@ -191,6 +309,61 @@ class TestLoggerJSON(Base):
         },
         'username': 'root',
     }
+
+
+class ConglomerateBase(unittest.TestCase):
+    originals = None
+    expected = None
+    maxDiff = None
+
+    def setUp(self):
+        dirname = os.path.abspath(os.path.dirname(__file__))
+        self.config = fedmsg.config.load_config(
+            filenames=[os.path.join(dirname, "fedmsg-test-config.py")],
+            invalidate_cache=True,
+        )
+        self.config['topic_prefix'] = 'org.fedoraproject'
+        self.config['topic_prefix_re'] = '^org\.fedoraproject\.(dev|stg|prod)'
+        fedmsg.meta.make_processors(**self.config)
+
+    @skip_on(['originals', 'expected'])
+    def test_conglomerate(self):
+        """ Does fedmsg.meta produce the expected conglomeration? """
+        actual = fedmsg.meta.conglomerate(self.originals, **self.config)
+        self.assertEquals(actual, self.expected)
+
+
+class TestConglomeratorExtras(unittest.TestCase):
+    def setUp(self):
+        dirname = os.path.abspath(os.path.dirname(__file__))
+        self.config = fedmsg.config.load_config(
+            filenames=[os.path.join(dirname, "fedmsg-test-config.py")],
+            invalidate_cache=True,
+        )
+        self.config['topic_prefix'] = 'org.fedoraproject'
+        self.config['topic_prefix_re'] = '^org\.fedoraproject\.(dev|stg|prod)'
+
+        self.conglomerator = fedmsg.meta.base.BaseConglomerator
+
+    def test_list_to_series_simple(self):
+        original, expected = ['a', 'b', 'c'], "a, c, and b"
+        result = self.conglomerator.list_to_series(original)
+        eq_(result, expected)
+
+    def test_list_to_series_single_duplicate(self):
+        original, expected = ['a', 'a', 'a'], "a"
+        result = self.conglomerator.list_to_series(original)
+        eq_(result, expected)
+
+    def test_list_to_series_double_duplicate(self):
+        original, expected = ['a', 'a', 'b', 'b'], "a and b"
+        result = self.conglomerator.list_to_series(original)
+        eq_(result, expected)
+
+    def test_list_to_series_backheavy_duplicate(self):
+        original, expected = ['a', 'b', 'b', 'b'], "a and b"
+        result = self.conglomerator.list_to_series(original)
+        eq_(result, expected)
 
 
 if __name__ == '__main__':

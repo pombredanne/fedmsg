@@ -1,5 +1,5 @@
 # This file is part of fedmsg.
-# Copyright (C) 2012 Red Hat, Inc.
+# Copyright (C) 2012 - 2014 Red Hat, Inc.
 #
 # fedmsg is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -67,10 +67,13 @@ except Exception:
 install_requires = [
     'pyzmq',
     'kitchen',
-    'moksha.hub>=1.2.0',
+    'moksha.hub>=1.3.0',
     'requests',
     'pygments',
+    'six',
     #'daemon',
+    'psutil',
+    'arrow',
 
     # These are "optional" for now to make installation from pypi easier.
     #'M2Crypto',
@@ -80,7 +83,6 @@ tests_require = [
     'nose',
     'mock',
     'sqlalchemy',  # For the persistent-store test(s).
-    'six',  # In the future, we'll use this across fedmsg proper for py3.
 ]
 
 if sys.version_info[0] == 2 and sys.version_info[1] <= 6:
@@ -95,12 +97,12 @@ if sys.version_info[0] == 2 and sys.version_info[1] <= 6:
 
 setup(
     name='fedmsg',
-    version='0.7.6',
+    version='0.11.1',
     description="Fedora Messaging Client API",
     long_description=long_description,
     author='Ralph Bean',
     author_email='rbean@redhat.com',
-    url='http://github.com/fedora-infra/fedmsg/',
+    url='https://github.com/fedora-infra/fedmsg/',
     license='LGPLv2+',
     install_requires=install_requires,
     tests_require=tests_require,
@@ -146,16 +148,15 @@ setup(
             #"fedmsg-config=fedmsg.commands.config:config",
             "fedmsg-irc=fedmsg.commands.ircbot:ircbot",
             "fedmsg-collectd=fedmsg.commands.collectd:collectd",
-            "fedmsg-tweet=fedmsg.commands.tweet:tweet",
             "fedmsg-announce=fedmsg.commands.announce:announce",
             "fedmsg-trigger=fedmsg.commands.trigger:trigger",
+            "fedmsg-dg-replay=fedmsg.commands.replay:replay",
         ],
         'moksha.consumer': [
             "fedmsg-dummy=fedmsg.consumers.dummy:DummyConsumer",
             "fedmsg-relay=fedmsg.consumers.relay:RelayConsumer",
             "fedmsg-gateway=fedmsg.consumers.gateway:GatewayConsumer",
             "fedmsg-ircbot=fedmsg.consumers.ircbot:IRCBotConsumer",
-            "fedmsg-tweet=fedmsg.consumers.tweet:TweetBotConsumer",
         ],
         'moksha.producer': [
         ],

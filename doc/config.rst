@@ -127,6 +127,18 @@ Glossary of Configuration Values
           ...     srv_endpoints=[foo.example.com]
           ...)
 
+    status_directory
+        ``str`` - A path to a directory where consumers can save the status of
+        their last processed message.  In conjunction with
+        :term:`datagrepper_url`, allows for automatic retrieval of backlog on
+        daemon startup.
+
+    datagrepper_url
+        ``url`` - A URL to an instance of the datagrepper web service, such as
+        https://apps.fedoraproject.org/datagrepper/raw.  Can be used in
+        conjuction with :term:`status_directory` to allow for automatic
+        retrieval of backlog on daemon startup.
+
     replay_endpoints
         ``dict`` - A mapping of service keys, the same as for :term:`endpoints`
         to replay endpoints, each key having only one. The replay endpoints are
@@ -326,7 +338,7 @@ Glossary of Configuration Values
 
     irc_color_lookup
         ``dict`` - A mapping of ``modname`` values to `MIRC irc color names
-        <http://www.mirc.com/colors.html>`_.  For example:
+        <https://www.mirc.com/colors.html>`_.  For example:
 
           >>> irc_color_lookup = {
           ...     "fas": "light blue",
@@ -344,61 +356,21 @@ Glossary of Configuration Values
         ``str`` — the name of the method used to publish the messages on IRC.
         Valid values are 'msg' and 'notice', the latter being the default.
 
-    tweet_endpoints
-        ``list`` - A list of twitter/statusnet configuration dicts.  This is the
-        primary way of configuring the ``fedmsg-tweet`` bot implemented in
-        :func:`fedmsg.commands.tweet.tweet`.
-
-        Each dict contains a number of possible options.  Take the following
-        example:
-
-          >>> tweet_endpoints=[
-          ...     tweet_settings=dict(
-          ...         base_url="http://api.twitter.com",
-          ...         consumer_key="123456789ABCDEF",
-          ...         consumer_secret="123456789ABCDEF",
-          ...         access_token_key="12345678ABCDEF",
-          ...         access_token_secret="1234567ABCDEF",
-          ...     ),
-          ...     dict(
-          ...         base_url="http://identi.ca/api",
-          ...         consumer_key="12345676ABCDEF",
-          ...         consumer_secret="12345678ABCDEF",
-          ...         access_token_key="12355ABCEEF",
-          ...         access_token_secret="123456ABCDEF",
-          ...     ),
-          ... ],
-
-        The ``base_url`` entry specifies which service to use.  The other
-        options are all oauth credentials.
-
-        See https://dev.twitter.com/docs/auth/tokens-devtwittercom about getting
-        credentials for twitter.com.  You can get all four authn values from
-        their site.
-
-        Statusnet is a bit more tricky.  You'll need to get your
-        ``consumer_key`` and ``consumer_secret`` yourself from http://identi.ca/
-        and then perform the "oauth dance" with `this python script
-        <https://gist.github.com/4070630>`_ in order to get your
-        ``access_token_key`` and ``access_token_secret``.
-
-    tweet_hibernate_duration
-        ``float`` - A number of seconds that :func:`fedmsg.commands.tweet.tweet`
-        should go to sleep if it encounters a rate limit error from either
-        statusnet or twitter.com.  Set this relatively high, multiple minutes
-        (120 or 180) since you don't want to exhaust your allowance.
-        There is a daily limit of 1,000 messages.  See http://bit.ly/W6agqr
-        for more information.
-
-    tweet_intermessage_pause
-        ``float`` - A number of seconds that :func:`fedmsg.commands.tweet.tweet`
-        should go to sleep inbetween every message it posts.  Set this
-        relatively low to 0.5 or 1.
-
     zmq_enabled
         ``bool`` - A value that must be true.  It is present solely
         for compatibility/interoperability with `moksha
         <http://mokshaproject.net>`_.
+
+    zmq_reconnect_ivl
+        ``int`` - Number of miliseconds that zeromq will wait to reconnect
+        until it gets a connection if an endpoint is unavailable. This is in
+        miliseconds. See upstream `zmq options
+        <http://api.zeromq.org/3-2:zmq-setsockopt>`_ for more information.
+
+    zmq_reconnect_ivl_max
+        ``int`` - Max delay that you can reconfigure to reduce reconnect storm
+        spam.  This is in miliseconds. See upstream `zmq options
+        <http://api.zeromq.org/3-2:zmq-setsockopt>`_ for more information.
 
     zmq_strict
         ``bool`` - When false, allow splats ('*') in topic names when
