@@ -25,6 +25,7 @@ import sys
 import pygments
 import pygments.lexers
 import pygments.formatters
+import six
 
 import fedmsg
 import fedmsg.encoding
@@ -99,6 +100,21 @@ class TailCommand(BaseCommand):
             'help': 'A comma-separated list of packages.  Show only messages'
             'related to these packages.',
         }),
+        (['--validate'], {
+            'dest': 'validate_signatures',
+            'default': None,
+            'help': 'Override the \'validate_signatures\' configuration value'
+            'to be True so that X509 certificates in messages are validated.',
+            'action': 'store_true',
+        }),
+        (['--no-validate'], {
+            'dest': 'validate_signatures',
+            'default': None,
+            'help': 'Override the \'validate_signatures\' configuration value'
+            'to be False so that X509 certificates in messages are ignored.',
+            'action': 'store_false',
+        }),
+
     ]
 
     def run(self):
@@ -139,7 +155,7 @@ class TailCommand(BaseCommand):
         if self.config['query']:
             def formatter(d):
                 result = fedmsg.utils.dict_query(d, self.config['query'])
-                return ", ".join([unicode(value) for value in result.values()])
+                return ", ".join([six.text_type(value) for value in result.values()])
 
         if self.config['terse']:
             formatter = lambda d: "\n" + fedmsg.meta.msg2repr(d, **self.config)

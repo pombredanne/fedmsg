@@ -24,15 +24,13 @@ import copy
 import os
 import socket
 
-from time import sleep, time
-from uuid import uuid4
+from time import sleep
 
 from moksha.hub.tests.test_hub import simulate_reactor
-from moksha.hub.hub import MokshaHub
 from moksha.hub import CentralMokshaHub
-from fedmsg.core import FedMsgContext
+from fedmsg.tests.common import requires_network
 
-from nose.tools import eq_, assert_true, assert_false, raises
+from nose.tools import eq_
 
 import fedmsg.config
 import fedmsg.consumers
@@ -78,13 +76,14 @@ class TestHub(unittest.TestCase):
         self.hub = CentralMokshaHub(config=config)
 
         # fully qualified
-        self.fq_topic = "com.test_prefix.dev.threadtest.foo"
+        self.fq_topic = "org.fedoraproject.dev.threadtest.foo"
         # short version
         self.topic = "foo"
 
     def tearDown(self):
         self.hub.close()
 
+    @requires_network
     def test_multi_threaded(self):
         """ Send messages from 5 concurrent threads. """
         messages_received = []

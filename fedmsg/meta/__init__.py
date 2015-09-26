@@ -50,7 +50,6 @@ End users can have multiple plugin sets installed simultaneously.
 
 """
 
-import arrow
 import six
 
 # gettext is used for internationalization.  I have tested that it can produce
@@ -65,6 +64,7 @@ else:
 
 
 from fedmsg.meta.default import DefaultProcessor
+from fedmsg.meta.base import BaseConglomerator
 
 import logging
 log = logging.getLogger("fedmsg")
@@ -74,6 +74,10 @@ class ProcessorsNotInitialized(Exception):
     def __iter__(self):
         raise self
     __len__ = __iter__
+
+    def __nonzero__(self):
+        return False
+    __bool__ = __nonzero__
 
 processors = ProcessorsNotInitialized("You must first call "
                                       "fedmsg.meta.make_processors(**config)")
@@ -92,8 +96,13 @@ def make_processors(**config):
         >>> text = fedmsg.meta.msg2repr(some_message_dict, **config)
 
     """
-    import pkg_resources
     global processors
+
+    # If they're already initialized, then fine.
+    if processors:
+        return
+
+    import pkg_resources
     processors = []
     for processor in pkg_resources.iter_entry_points('fedmsg.meta'):
         try:
@@ -157,7 +166,7 @@ def with_processor():
     return _wrapper
 
 
-def conglomerate(messages, **config):
+def conglomerate(messages, subject=None, **config):
     """ Return a list of messages with some of them grouped into conglomerate
     messages.  Conglomerate messages represent several other messages.
 
@@ -167,12 +176,15 @@ def conglomerate(messages, **config):
     messages, one representing the 38 git commit messages, one representing the
     bodhi.update message, and one representing the badge.award message.
 
+    The ``subject`` argument is optional and will return "subjective"
+    representations if possible (see msg2subjective(...)).
+
     Functionality is provided by fedmsg.meta plugins on a "best effort" basis.
     """
 
     # First, give every registered processor a chance to do its work
     for processor in processors:
-        messages = processor.conglomerate(messages, **config)
+        messages = processor.conglomerate(messages, subject=subject, **config)
 
     # Then, just fake it for every other ungrouped message.
     for i, message in enumerate(messages):
@@ -181,19 +193,16 @@ def conglomerate(messages, **config):
             continue
 
         # For ungrouped ones, replace them with a fake conglomerate
-        messages[i] = {
-            'subtitle': msg2subtitle(message, **config),
+        messages[i] = BaseConglomerator.produce_template(
+            [message], subject=subject, **config)
+        # And fill out the fields that fully-implemented conglomerators would
+        # normally fill out.
+        messages[i].update({
             'link': msg2link(message, **config),
-            'icon': msg2icon(message, **config),
+            'subtitle': msg2subtitle(message, **config),
+            'subjective': msg2subjective(message, subject=subject, **config),
             'secondary_icon': msg2secondary_icon(message, **config),
-            'start_time': message['timestamp'],
-            'end_time': message['timestamp'],
-            'timestamp': message['timestamp'],
-            'human_time': arrow.get(message['timestamp']).humanize(),
-            'usernames': msg2usernames(message, **config),
-            'packages': msg2packages(message, **config),
-            'msg_ids': [message['msg_id']],
-        }
+        })
 
     return messages
 
@@ -269,6 +278,36 @@ def msg2usernames(msg, processor=None, legacy=False, **config):
     return processor.usernames(msg, **config)
 
 
+@with_processor()
+def msg2agent(msg, processor=None, legacy=False, **config):
+    """ Return the single username who is the "agent" for an event.
+
+    An "agent" is the one responsible for the event taking place, for example,
+    if one person gives karma to another, then both usernames are returned by
+    msg2usernames, but only the one who gave the karma is returned by
+    msg2agent.
+
+    If the processor registered to handle the message does not provide an
+    agent method, then the *first* user returned by msg2usernames is returned
+    (whether that is correct or not).  Here we assume that if a processor
+    implements `agent`, then it knows what it is doing and we should trust
+    that.  But if it does not implement it, we'll try our best guess.
+
+    If there are no users returned by msg2usernames, then None is returned.
+    """
+
+    if not processor.agent is NotImplemented:
+        return processor.agent(msg, **config)
+    else:
+        usernames = processor.usernames(msg, **config)
+        # usernames is a set(), which doesn't support indexing.
+        if usernames:
+            return usernames.pop()
+
+    # default to None if we can't find anything
+    return None
+
+
 @legacy_condition(set)
 @with_processor()
 def msg2packages(msg, processor, **config):
@@ -303,3 +342,19 @@ def msg2emails(msg, processor, **config):
 def msg2avatars(msg, processor, **config):
     """ Return a dict mapping of usernames to avatar URLs. """
     return processor.avatars(msg, **config)
+
+
+@legacy_condition(six.text_type)
+@with_processor()
+def msg2subjective(msg, processor, subject, **config):
+    """ Return a human-readable text representation of a dict-like
+    fedmsg message from the subjective perspective of a user.
+
+    For example, if the subject viewing the message is "oddshocks"
+    and the message would normally translate into "oddshocks commented on
+    ticket #174", it would instead translate into "you commented on ticket
+    #174". """
+    text = processor.subjective(msg, subject, **config)
+    if not text:
+        text = processor.subtitle(msg, **config)
+    return text

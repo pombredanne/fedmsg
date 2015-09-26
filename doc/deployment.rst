@@ -28,7 +28,7 @@ The basics
 
 First install fedmsg::
 
-    $ sudo yum install fedmsg
+    $ sudo dnf install fedmsg
 
 Now you have some ``fedmsg-*`` cli tools like ``fedmsg-tail`` and
 ``fedmsg-logger``.
@@ -53,7 +53,7 @@ terminal does.
 
 Install fedmsg-relay and start it::
 
-    $ sudo yum install fedmsg-relay
+    $ sudo dnf install fedmsg-relay
     $ sudo systemctl restart fedmsg-relay
     $ sudo systemctl enable fedmsg-relay
 
@@ -92,8 +92,61 @@ terminal.  It should look something like this.
 These are two handy tools for debugging the configuration of your
 bus.
 
+Branching out to two machines
+-----------------------------
+
+Everything is tied together in fedmsg by the :term:`endpoints` dict.  It lets
+
+- A publishing service know what port it should be publishing on.
+- A consuming service know where the publisher is so it can connect there.
+
+Let's say you have two machines ``hostA`` and ``hostB``.  If you installed that
+fedmsg-relay on ``hostA`` as discussed above, then the config file in
+``/etc/fedmsg.d/relay.py`` is going to have values like
+``tcp://127.0.0.1:4001``.  That address will only work for local connectivity.
+Try changing *all* occurences of ``127.0.0.1`` in that file to ``hostA`` so
+that it looks something like this:
+
+.. code-block:: python
+
+    config = dict(
+        endpoints={
+            "relay_outbound": [
+                "tcp://hostA:4001",
+            ],
+        },
+        relay_inbound=[
+            "tcp://hostA:2003",
+        ],
+    )
+
+To confirm that something's not immediately broken, you can go through the
+tests of doing ``fedmsg-logger`` and ``fedmsg-tail`` on ``hostA`` again (all
+"local").
+
+Copy that relay.py file over to ``hostB`` with ``scp /etc/fedmsg.d/relay.py
+hostB:/etc/fedmsg.d/relay.py``
+
+You should now be able to run ``fedmsg-tail`` on ``hostA`` and have it receive
+a message from ``fedmsg-logger`` on ``hostB`` and vice versa have a
+``fedmsg-tail`` session on ``hostB`` receive a ``fedmsg-logger`` statement from
+``hostA``.
+
+The key here is that fedmsg works by having a **shared configuration** that is
+distributed to all machines.  ``hostA`` only knows where to publish by reading in
+the config and ``hostB`` only knows where to consume by reading in the config.  If
+the configs are not the same, then there's going to be a mis-match and your
+messages won't arrive... anywhere.
+
+It's a far leap ahead, but you're welcome to browse the `configuration we're
+using in production for Fedora Infrastructure
+<https://infrastructure.fedoraproject.org/cgit/ansible.git/tree/roles/fedmsg/base>`_.
+
+
 Store all messages
 ------------------
+
+And now for a different topic.
 
 We use a tool called `datanommer <https://github.com/fedora-infra/datanommer>`_
 to store all the messages that come across the bus in a postgres database.
@@ -105,7 +158,7 @@ Setting up postgres
 
 Here, set up a postgres database::
 
-    $ sudo yum install postgresql-server python-psycopg2
+    $ sudo dnf install postgresql-server python-psycopg2
     $ postgresql-setup initdb
 
 Edit the ``/var/lib/pgsql/data/pg_hba.conf`` as the user postgres. You might
@@ -140,7 +193,7 @@ Setting up datanommer
 
 Install it::
 
-    $ sudo yum install fedmsg-hub python-datanommer-consumer datanommer-commands
+    $ sudo dnf install fedmsg-hub python-datanommer-consumer datanommer-commands
 
 Edit the configuration to 1) be enabled, 2) point at your newly created
 postgres db.  Edit ``/etc/fedmsg.d/datanommer.py`` and change the whole thing
@@ -181,7 +234,7 @@ You can, of course, query datanommer with SQL yourself (and there's a python
 API for directly querying in the ``datanommer.models`` module).  For the rest
 here is the HTTP API we have called "datagrepper".  Let's set it up::
 
-    $ sudo yum install datagrepper mod_wsgi
+    $ sudo dnf install datagrepper mod_wsgi
 
 Add a config file for it in ``/etc/httpd/conf.d/datagrepper.conf`` with these contents::
 
@@ -215,7 +268,7 @@ And it should just work.  Open a web browser and try to visit
 The whole point of datagrepper is its API, which you might experiment with
 using the httpie tool::
 
-    $ sudo yum install httpie
+    $ sudo dnf install httpie
     $ http get http://localhost/datagrepper/raw/ order==desc
 
 Outro

@@ -1,7 +1,34 @@
-Changelog
-=========
 
-0.11.1
+0.16.1
+------
+
+Pull Requests
+
+- (@vivekanand1101) Added links to doc in Readme `#352
+  <https://github.com/fedora-infra/fedmsg/pull/352>`_
+- (@ralphbean)      Add a new msg2agent API call to fedmsg.meta. `#353
+  <https://github.com/fedora-infra/fedmsg/pull/353>`_
+
+Commits
+
+- Update README.rst `9f394994c
+  <https://github.com/fedora-infra/fedmsg/commit/9f394994c>`_
+- Added link to doc in Readme #2 `9b046afc8
+  <https://github.com/fedora-infra/fedmsg/commit/9b046afc8>`_
+- Added link to doc in Readme #3 `857264af3
+  <https://github.com/fedora-infra/fedmsg/commit/857264af3>`_
+- Add a new msg2agent API call to fedmsg.meta. `a06d6f987
+  <https://github.com/fedora-infra/fedmsg/commit/a06d6f987>`_
+- Change test framework to allow testing None values. `69be0e960
+  <https://github.com/fedora-infra/fedmsg/commit/69be0e960>`_
+- Add agent tests for the handful of baked-in processors. `bc5d7cb89
+  <https://github.com/fedora-infra/fedmsg/commit/bc5d7cb89>`_
+- Some reprs for the UnspecifiedType. `b77448a12
+  <https://github.com/fedora-infra/fedmsg/commit/b77448a12>`_
+- Remove header from changelog file. `39a38b61f
+  <https://github.com/fedora-infra/fedmsg/commit/39a38b61f>`_
+
+0.16.0
 ------
 
 - add support for cowsay command `578826834 <https://github.com/fedora-infra/fedmsg/commit/5788268342c1186507c7fc36db986814e9a8c198>`_
@@ -75,6 +102,172 @@ Changelog
 - Add some passing test cases. `52c4d40d5 <https://github.com/fedora-infra/fedmsg/commit/52c4d40d52af1276c7fe1a10cba1689b964f8b09>`_
 - Restart services on failure (systemd). `f42861fc9 <https://github.com/fedora-infra/fedmsg/commit/f42861fc93c074408ae96c1b797d4e1f0cab6a7a>`_
 - Merge pull request #297 from fedora-infra/feature/restart-on-failure `d175c5479 <https://github.com/fedora-infra/fedmsg/commit/d175c5479e61d9feaf7c73463b8f83ebdf462985>`_
+- 0.11.1 `d245335bd <https://github.com/fedora-infra/fedmsg/commit/d245335bd06340d22a6d4ae99b5437b6919a935e>`_
+- Try to get tests passing in koji again. `261bf1fcb <https://github.com/fedora-infra/fedmsg/commit/261bf1fcb2ae393e3ef96805e7d7b2f93884f90d>`_
+- Merge pull request #298 from fedora-infra/feature/kojifix `23cb93b30 <https://github.com/fedora-infra/fedmsg/commit/23cb93b304d2bcfab637d888e698c9c9d9e0115c>`_
+- Remove unused imports. `a662519d4 <https://github.com/fedora-infra/fedmsg/commit/a662519d42507673e91f82c8250eafc88dbb8d27>`_
+- Increase the lineRate value to 1.0 `b1d916afc <https://github.com/fedora-infra/fedmsg/commit/b1d916afcf864dd972f6e3567fbf59db1aef3138>`_
+- Merge pull request #301 from ampotty/develop `9dd647091 <https://github.com/fedora-infra/fedmsg/commit/9dd647091995536818a9f9c65ac2a3d977a0753f>`_
+- Merge pull request #300 from fedora-infra/feature/remove-unused `7dcec4973 <https://github.com/fedora-infra/fedmsg/commit/7dcec49735826a68ca7be87364d7546c66e42ad7>`_
+- Docs - rename SERVICE to CATEGORY. `230ecfea5 <https://github.com/fedora-infra/fedmsg/commit/230ecfea5004ef90f386c205a89e72fea4040733>`_
+- Merge pull request #303 from fedora-infra/feature/doc-consistency `4762aa4e3 <https://github.com/fedora-infra/fedmsg/commit/4762aa4e37ea832bb20515f8c084e25d61cea75c>`_
+- Simplify fedmsg-relay usage. `43cfcce75 <https://github.com/fedora-infra/fedmsg/commit/43cfcce75e3ac9e315c32faa8c60fe0487144e81>`_
+- Merge pull request #306 from fedora-infra/feature/simplify-relay-usage `be86874e3 <https://github.com/fedora-infra/fedmsg/commit/be86874e33fa258100bf5ac1eb22e3c386f3168a>`_
+- Documentation for reconnect interval options `036286c6b <https://github.com/fedora-infra/fedmsg/commit/036286c6b131e8c6de22cb233412836b0cbdfaad>`_
+- add comment about repo_name `029beca9b <https://github.com/fedora-infra/fedmsg/commit/029beca9b951b24b8101cecb9e65d21a9d7fc0d4>`_
+- Merge pull request #308 from glensc/fix1 `efd1a282d <https://github.com/fedora-infra/fedmsg/commit/efd1a282d68e8cb6139e8507675bc0f4d5e42934>`_
+- Use the much more awesome pygit2. `c3070966d <https://github.com/fedora-infra/fedmsg/commit/c3070966d71192f811a7d867bbfa4ad136a6eec3>`_
+- Calculate diff stats for fedmsg git hook (pygit2!) `3a0169538 <https://github.com/fedora-infra/fedmsg/commit/3a0169538dd4163a58947bc49117be41d54ec0bd>`_
+- Merge branch 'develop' of git://github.com/ampotty/fedmsg into develop `351e868ce <https://github.com/fedora-infra/fedmsg/commit/351e868cea885721a32c400ab403d394494ef5dc>`_
+- Add reconnect interval options to the glossary for #307. `bda6d860c <https://github.com/fedora-infra/fedmsg/commit/bda6d860c7a97ac020c3381a44f53258275a5562>`_
+- Merge pull request #310 from fedora-infra/feature/pygit2 `b4aafee9f <https://github.com/fedora-infra/fedmsg/commit/b4aafee9fe70c1d4e04c84f11d64d3bd00b7dd75>`_
+- Add a comma here to help out people who modify this file. `ded110e23 <https://github.com/fedora-infra/fedmsg/commit/ded110e2357ea400a64d90822efd43213374cfd4>`_
+- Update the status doc. `40650bdfc <https://github.com/fedora-infra/fedmsg/commit/40650bdfce59bd6d31283fc4624ec548470edfa0>`_
+- Start some more deployment docs. `f548ee135 <https://github.com/fedora-infra/fedmsg/commit/f548ee1351be88152ed754c7f2c45a75ff701fb7>`_
+- Merge pull request #311 from fedora-infra/feature/more-deployment-docs `d1611e2b4 <https://github.com/fedora-infra/fedmsg/commit/d1611e2b40cef2760313b532d053699d457f600b>`_
+- Fix ValueError when using gpg and gpg_home is not set `c1db9c55e <https://github.com/fedora-infra/fedmsg/commit/c1db9c55ee41a92773caf332ff4e8852f966fff1>`_
+- Merge pull request #313 from mbooth101/gpg_home_fix `1ae494016 <https://github.com/fedora-infra/fedmsg/commit/1ae4940162670c2493033406be56a06668fad10b>`_
+- Typo fix `923f688ab <https://github.com/fedora-infra/fedmsg/commit/923f688ab1c419c31fa9047ad782cdfef3eea5d8>`_
+- Merge pull request #314 from lewiscowper/patch-1 `fdacb00ad <https://github.com/fedora-infra/fedmsg/commit/fdacb00ad313850917ebe47bef641211f9834a46>`_
+- Add list of topics and categories to grouped messages. `9a12837fb <https://github.com/fedora-infra/fedmsg/commit/9a12837fb1a4c1a8a368d621dc4018545e8e1e8f>`_
+- Merge pull request #315 from fedora-infra/feature/more-grouped-attrs `a120d3615 <https://github.com/fedora-infra/fedmsg/commit/a120d361593d50af3223674493256633221d53d1>`_
+- Surface CRL errors. `8399e7ba6 <https://github.com/fedora-infra/fedmsg/commit/8399e7ba621440af78cf40f7ab333014fc1f78ee>`_
+- Merge pull request #316 from fedora-infra/feature/surface-crl-error `25bea70c6 <https://github.com/fedora-infra/fedmsg/commit/25bea70c651971fb22cfe7e2997c0dcd12fe8f5b>`_
+- 0.12.0 `5610f0b0d <https://github.com/fedora-infra/fedmsg/commit/5610f0b0ddb488a1e74fc259d17b66bc5a532c67>`_
+- Merge branch 'master' of github.com:fedora-infra/fedmsg `bc7622f10 <https://github.com/fedora-infra/fedmsg/commit/bc7622f1020b35d11a3f8b69ca0c0247eb9e999a>`_
+- Merge branch 'master' into develop `c70bed8b2 <https://github.com/fedora-infra/fedmsg/commit/c70bed8b26312334601fcfb2a597cbbe496a94e2>`_
+- Make IRC lineRate configurable. `785fb7889 <https://github.com/fedora-infra/fedmsg/commit/785fb7889669f16d2ea92a22287fbe0df40ce409>`_
+- Merge pull request #317 from fedora-infra/feature/configurable-linerate `cc8e37fff <https://github.com/fedora-infra/fedmsg/commit/cc8e37fffc8b1122f6bf9bd17defa01516317a57>`_
+- Include constituent metadata in the conglomerate message. `a792a6f53 <https://github.com/fedora-infra/fedmsg/commit/a792a6f53c57e5f6ace0dbfc2df9ca195a0bbce5>`_
+- Delete the msg_ids field during tests. `8f307f0c4 <https://github.com/fedora-infra/fedmsg/commit/8f307f0c48e7ed7b69064a32cb4b9ca45eda8c38>`_
+- Merge pull request #318 from fedora-infra/feature/include-consituents `e84928a44 <https://github.com/fedora-infra/fedmsg/commit/e84928a4436c2747dc82c6b0f204a12a60979625>`_
+- Remove unused statement. `57a97d929 <https://github.com/fedora-infra/fedmsg/commit/57a97d9290bf39b47ea3c759ef41479ac39d8ce5>`_
+- Handle multiple topics. `b0dc6632a <https://github.com/fedora-infra/fedmsg/commit/b0dc6632ac207ad2d6a4456630494fee35967069>`_
+- Merge pull request #319 from fedora-infra/feature/handle-multiple-topics `4013d5707 <https://github.com/fedora-infra/fedmsg/commit/4013d57074e38400a76d6251ad96f1ebcd5c7310>`_
+- Scrub args from keywords before initializing. `97e0a0d4e <https://github.com/fedora-infra/fedmsg/commit/97e0a0d4e31e9a541faab3a59bc222837b2ffa7b>`_
+- Merge pull request #321 from fedora-infra/feature/scrub-api-args `06212349a <https://github.com/fedora-infra/fedmsg/commit/06212349a8002bd5fe791efc5a4f4ba9f8078b50>`_
+- 0.12.1 `dd7d48e84 <https://github.com/fedora-infra/fedmsg/commit/dd7d48e840890f86d48e009206e0e5d4feb8924a>`_
+- Typofix.  Don't scrub args from the original call to func. `0e3bc165a <https://github.com/fedora-infra/fedmsg/commit/0e3bc165ad0667f7cc3f42bbcc3f140537100fb0>`_
+- 0.12.2 `a1b7d920f <https://github.com/fedora-infra/fedmsg/commit/a1b7d920f133f8b24ced6e2682ea81e254dffee6>`_
+- Bail on git objects if they are a tag. `892db3116 <https://github.com/fedora-infra/fedmsg/commit/892db3116f250fae4427219b6890b61a61de081b>`_
+- Attempt to avoid infinite recursion when finding the list of new revs. `3182fe460 <https://github.com/fedora-infra/fedmsg/commit/3182fe46043848c66e287b671e5e352192c535fe>`_
+- Improve git hook to only report on new commits `c0ef2bed7 <https://github.com/fedora-infra/fedmsg/commit/c0ef2bed70aa75bdbb3ca79dd8d544467d5de901>`_
+- Fix up some type errors. `f860757fc <https://github.com/fedora-infra/fedmsg/commit/f860757fc4a04d5d92a2859d3c22e9e01e069ce3>`_
+- Add a print statement. `1e256ff30 <https://github.com/fedora-infra/fedmsg/commit/1e256ff30c4b0e960441840ea14c17fc13cad547>`_
+- Merge pull request #322 from fedora-infra/feature/git-hook-updates `6c9df7f45 <https://github.com/fedora-infra/fedmsg/commit/6c9df7f45f8e258723d9421a4f86499e81b24074>`_
+- Avoid recursively walking the entire git history. `e4dd3ddff <https://github.com/fedora-infra/fedmsg/commit/e4dd3ddff802ebd1c733ab1bbe48313b9e72e3f8>`_
+- Merge pull request #323 from fedora-infra/feature/avoid-recursion `3410233f1 <https://github.com/fedora-infra/fedmsg/commit/3410233f154bce9f7303bf058439af92a2d2288e>`_
+- Add more debug info to test suite failures. `fcaea0e25 <https://github.com/fedora-infra/fedmsg/commit/fcaea0e259ae7d54e90f04189fdc7ccc4705ba0a>`_
+- Typofix. `01b1e84a8 <https://github.com/fedora-infra/fedmsg/commit/01b1e84a82ba68efda42be67bb378885c12290e5>`_
+- Getting the source lines is error prone.  No need. `3a66314be <https://github.com/fedora-infra/fedmsg/commit/3a66314be7a9b32b8f735e4bd2e372d75ca6d9af>`_
+- Another typofix. `b9aade39b <https://github.com/fedora-infra/fedmsg/commit/b9aade39ba31383a9bbcf801dda1c64eb7936f40>`_
+- Re-use the produce_template function for consistency. `bacb42c21 <https://github.com/fedora-infra/fedmsg/commit/bacb42c21181fadc13aa9b8a32f2a80a8a7bc308>`_
+- No more infinite loops. `4d9e9ac2d <https://github.com/fedora-infra/fedmsg/commit/4d9e9ac2d0024443f7faafb07917d5e11d3f16c8>`_
+- Merge pull request #326 from fedora-infra/feature/FFFFFFUUUUUUUU `c2e96ecd0 <https://github.com/fedora-infra/fedmsg/commit/c2e96ecd01ff101685c4ba08d126998f447fbce7>`_
+- Merge pull request #325 from fedora-infra/feature/conglomerate-consistency `3c1318c6a <https://github.com/fedora-infra/fedmsg/commit/3c1318c6a792363f6fd5bb6fd6e05f16091c7a90>`_
+- Merge pull request #324 from fedora-infra/feature/more-test-debuginfo `ba4da5fcc <https://github.com/fedora-infra/fedmsg/commit/ba4da5fccea2354877bf0e3585bfad8197c3ce71>`_
+- Shell out to rev-list to get the list of commits. `81d2c7d85 <https://github.com/fedora-infra/fedmsg/commit/81d2c7d85545906cb5bf6415fcb499a729a0c851>`_
+- Keep track of duplicate git messages. `5e66ea633 <https://github.com/fedora-infra/fedmsg/commit/5e66ea633a9cf775ea94e1520b39575d89e5deb8>`_
+- Merge pull request #327 from fedora-infra/feature/git-hook-improvements `108be6b6e <https://github.com/fedora-infra/fedmsg/commit/108be6b6e8ae2b75f25d664dce1b4560b286f092>`_
+- 0.12.3 `25ff1415a <https://github.com/fedora-infra/fedmsg/commit/25ff1415a217694396827d6e7a804d83630c92ca>`_
+- Obviously, this should come first. `5107143a0 <https://github.com/fedora-infra/fedmsg/commit/5107143a00e0634ccd6eaa07a16c53768674e490>`_
+- Publish git commits in chronological order. `5b3d7548b <https://github.com/fedora-infra/fedmsg/commit/5b3d7548b5dd2470142565daaece5b91ea2efd94>`_
+- Merge pull request #328 from fedora-infra/feature/git-hook-in-order `5d1c585dd <https://github.com/fedora-infra/fedmsg/commit/5d1c585dd17ea4ef14deaee38c6c59e7da26fd08>`_
+- Add some debug statements. `a54c2e9cf <https://github.com/fedora-infra/fedmsg/commit/a54c2e9cfa1bd3c5ecb9f945ecc618d549bc0b4c>`_
+- Merge pull request #329 from fedora-infra/feature/debug-statement `90e6a82b8 <https://github.com/fedora-infra/fedmsg/commit/90e6a82b85b3df562d7cecb780270e1ece7308b8>`_
+- First draft of a script to scan a fedmsg installation. `289adc887 <https://github.com/fedora-infra/fedmsg/commit/289adc8874bb0988f1ecd67fbf3bae152a3e432c>`_
+- Enhance fedmsg-map to produce output for collectd. `d5089110f <https://github.com/fedora-infra/fedmsg/commit/d5089110f141aa7a1009215407f3d60d46d1e885>`_
+- Add a verbose mode and bump up the timeout setting. `00c11646f <https://github.com/fedora-infra/fedmsg/commit/00c11646f4b6298a3451686a04c99ff8f532b56f>`_
+- Merge pull request #331 from fedora-infra/feature/fedmsg-map `1b01533aa <https://github.com/fedora-infra/fedmsg/commit/1b01533aaa60f8986c20392b95d88a9e6885cb74>`_
+- Initial shot at Python 3 support `05a7a4789 <https://github.com/fedora-infra/fedmsg/commit/05a7a4789ca65c3e0b974570c59c4ad2f6db15da>`_
+- Merge pull request #332 from bkabrda/develop `bfb49e9ef <https://github.com/fedora-infra/fedmsg/commit/bfb49e9ef9af3e27e32e23f3715f9abafd0002a8>`_
+- correct config file locations `5d549b004 <https://github.com/fedora-infra/fedmsg/commit/5d549b00402fa7959ab43bae18a4f8597714ae8d>`_
+- removed unsused import `f2a9350f1 <https://github.com/fedora-infra/fedmsg/commit/f2a9350f1e69f8dbd7d13860b90fbdce7aa9dc51>`_
+- Merge pull request #333 from Nolski/develop `30b4f1c15 <https://github.com/fedora-infra/fedmsg/commit/30b4f1c15850172ceba4af2e31ffe50c97b26964>`_
+- Rewrite 'sign' function using cryptography `55af2a831 <https://github.com/fedora-infra/fedmsg/commit/55af2a83157c06a04af9b00e9700ad6ea9630286>`_
+- Make list_to_series return uniqified items in predictable order. `ec250e096 <https://github.com/fedora-infra/fedmsg/commit/ec250e096a84164ab45a93424530285ec39583af>`_
+- Merge pull request #334 from bkabrda/develop `f661df461 <https://github.com/fedora-infra/fedmsg/commit/f661df461359606d4c6f32b890d9ed173185b592>`_
+- 0.13.0 `af47379b6 <https://github.com/fedora-infra/fedmsg/commit/af47379b66124f250cc2979e1a69437439d3f9e9>`_
+- Some collectd tweaks. `a282cd0f6 <https://github.com/fedora-infra/fedmsg/commit/a282cd0f62b90f401a36535860d1ebb946c8b6dd>`_
+- Start testing with tox. `8b06ec046 <https://github.com/fedora-infra/fedmsg/commit/8b06ec0466fd9204b859089e55f9b3eed45218b6>`_
+- Dodge the metaclass if on an ancient python-six. `3f2cf80a7 <https://github.com/fedora-infra/fedmsg/commit/3f2cf80a789a295514a3d2379a52ef61caa0dd09>`_
+- Make "arrow" optional to avoid version anger with python-six. `1de8cf72f <https://github.com/fedora-infra/fedmsg/commit/1de8cf72f327e966a38fe0b39e89f007cdb31c0b>`_
+- Merge pull request #335 from fedora-infra/feature/six-careful `6573ed7a6 <https://github.com/fedora-infra/fedmsg/commit/6573ed7a6fb75bad081ea9fe0733c5c383dacada>`_
+- 0.13.1 `e293b2da5 <https://github.com/fedora-infra/fedmsg/commit/e293b2da56a876ada0c81beefc52f7bcd96379db>`_
+- Make order of configuration files predictable `bb3fa15ac <https://github.com/fedora-infra/fedmsg/commit/bb3fa15ac6e39cf0f8b11672262303d69eaddd72>`_
+- Merge pull request #336 from msimacek/develop `5f0f7c972 <https://github.com/fedora-infra/fedmsg/commit/5f0f7c9726835034897919805fd774104a4019cb>`_
+- Include changes from our ansible repo. `e33630f29 <https://github.com/fedora-infra/fedmsg/commit/e33630f29b7b93f2388d1a85d595eec937479d1f>`_
+- Merge branch 'develop' of github.com:fedora-infra/fedmsg into develop `1d82d2a02 <https://github.com/fedora-infra/fedmsg/commit/1d82d2a02eae375b2492bc8054cfbbcb71f01609>`_
+- Use a threadpool to speed this up. `79aa516ea <https://github.com/fedora-infra/fedmsg/commit/79aa516ea175428eee3a51cacba72b891a91725a>`_
+- Merge pull request #337 from fedora-infra/feature/fedmsg-map-threadpool `47c2e5e45 <https://github.com/fedora-infra/fedmsg/commit/47c2e5e456e178ee53de2d0998ab28fd1683e68c>`_
+- Flatten the threadpool workload. `e54f4357b <https://github.com/fedora-infra/fedmsg/commit/e54f4357b364f783b49c8bb3ce0579c96dd22369>`_
+- Merge pull request #338 from fedora-infra/feature/more-threads `f84dbab4f <https://github.com/fedora-infra/fedmsg/commit/f84dbab4f319f8e62e8e60e5d68b24033367543b>`_
+- add a msg2subjective method to fedmsg.meta `b21c26fa8 <https://github.com/fedora-infra/fedmsg/commit/b21c26fa89f737a0eee057be988224cbc2172787>`_
+- add a subjective() method to the BaseProcessor `bcca93046 <https://github.com/fedora-infra/fedmsg/commit/bcca930468b316b024758cc25d034cf57f089142>`_
+- test subjective messages in base test class `1b24093db <https://github.com/fedora-infra/fedmsg/commit/1b24093db674cb54abcaa9e7923a38ed3838c3a2>`_
+- if a processor doesn't have a subjective method, fall back to subtitle `ec464eb30 <https://github.com/fedora-infra/fedmsg/commit/ec464eb30685ab6a6cd61575536401bda549cb6a>`_
+- need to pass the subject to the processor `38235830a <https://github.com/fedora-infra/fedmsg/commit/38235830a65041dce1eff13ea3e31673ad3f29a6>`_
+- I suppose we could give this a default value `71e5a7eda <https://github.com/fedora-infra/fedmsg/commit/71e5a7edac0daae245aa1e3c411a58d5e4a1b935>`_
+- I believe we have to pass a username here for the subject `ad2f646ee <https://github.com/fedora-infra/fedmsg/commit/ad2f646ee422e4c477e57c481d954355092e223b>`_
+- we don't need a default for this, since there's no point in a subjective message without a subject `c9e4a522b <https://github.com/fedora-infra/fedmsg/commit/c9e4a522b8c55b0883021aa33d07e0c50c7c980e>`_
+- No need to rebuild fedmsg.meta processors `f9e064883 <https://github.com/fedora-infra/fedmsg/commit/f9e0648834336d814b467995dc789ab04f204060>`_
+- Move global declaration to the top. `c6c0c19a7 <https://github.com/fedora-infra/fedmsg/commit/c6c0c19a749850a2ed7d4dd677a0578e543ff257>`_
+- Fix a couple tests which try to reinitialize the processors with mocked config. `06ecdb5cd <https://github.com/fedora-infra/fedmsg/commit/06ecdb5cdf348aec6113d0ec96e32d534f80af03>`_
+- Merge pull request #341 from fedora-infra/feature/no-need-to-rebuild `4d4126775 <https://github.com/fedora-infra/fedmsg/commit/4d4126775f900bc21446d9965ff90e7c4920fbc8>`_
+- 0.13.2 `6674a1686 <https://github.com/fedora-infra/fedmsg/commit/6674a1686aa354458faf2758ddc7f8d55458cc1e>`_
+- Don't overwrite processors in the tests to keep things faster. `b104fac57 <https://github.com/fedora-infra/fedmsg/commit/b104fac570796967fe124268b925c6230c0bdfce>`_
+- 0.13.3 `75cdf2648 <https://github.com/fedora-infra/fedmsg/commit/75cdf2648e3b7ea17f61f1f40baefa799174ac30>`_
+- These tests require network.. so don\'t fail without a special env var set. `e6601d6e3 <https://github.com/fedora-infra/fedmsg/commit/e6601d6e30b569ee46f7da59e6b2d2ec140e79ee>`_
+- Need to reset processors for this test to pass.  It only works the first time. `dcfee1e2f <https://github.com/fedora-infra/fedmsg/commit/dcfee1e2f8bd7d0abc6db042bbd801d84bb80a81>`_
+- pylint cleanup of some test files. `9cc3ff5ef <https://github.com/fedora-infra/fedmsg/commit/9cc3ff5ef291e7ba04e40a47139677e7d845ecf2>`_
+- Markup some other tests that require network. `259fd3cdd <https://github.com/fedora-infra/fedmsg/commit/259fd3cdd83904b4aacfcbf777f400100500e2e2>`_
+- Merge branch 'cryptography' into feature/py34-finish `302df19c4 <https://github.com/fedora-infra/fedmsg/commit/302df19c4c47ab73cadac478b3f020908da35e56>`_
+- Merge pull request #342 from fedora-infra/feature/fix-tests `3a5d9e6c7 <https://github.com/fedora-infra/fedmsg/commit/3a5d9e6c76a9b31b701363a40e7a03e20ac412ed>`_
+- A little more cleanup. `c8353faa2 <https://github.com/fedora-infra/fedmsg/commit/c8353faa27c0805da37ac159d12602130c7c2731>`_
+- Split x509 into two modules.  One for py2 and one for py3. `136a42000 <https://github.com/fedora-infra/fedmsg/commit/136a42000f47abe8ff01593297cfe07128801970>`_
+- Switch between the two module accordingly. `22fa72c40 <https://github.com/fedora-infra/fedmsg/commit/22fa72c40ee999fd5b27e25ad85c2be9dbd56eba>`_
+- Restore functionality removed on accident. `16a38eb64 <https://github.com/fedora-infra/fedmsg/commit/16a38eb6477ef45a9e7cad459c4d1f46840a960c>`_
+- Conditionalize skippable imports in for the x509 tests. `6bb5fd0c4 <https://github.com/fedora-infra/fedmsg/commit/6bb5fd0c4e0d6adf38de72a59948fdf690d145d9>`_
+- Merge pull request #343 from fedora-infra/feature/py34-finish `c4808d8ce <https://github.com/fedora-infra/fedmsg/commit/c4808d8ce35c9982e38bee61942559984cad9421>`_
+- 0.14.0 `bb527e15b <https://github.com/fedora-infra/fedmsg/commit/bb527e15b46c9ebcf127240022736362aadc2aad>`_
+- Fix two py3 encoding oversights. `6ac68cf46 <https://github.com/fedora-infra/fedmsg/commit/6ac68cf46269000f6be31bac88a119c9126b72ad>`_
+- Get the encoding story straight here. `f317544ce <https://github.com/fedora-infra/fedmsg/commit/f317544ce9591f78cc04f0db38d7861d97e6ca4a>`_
+- 0.14.1 `07e8e11ef <https://github.com/fedora-infra/fedmsg/commit/07e8e11ef7e787628c830d28d72ca08f1f173ca5>`_
+- Fix small typo in doc. `acc233196 <https://github.com/fedora-infra/fedmsg/commit/acc233196cf27598071e87d8d641c59e1899b5aa>`_
+- Fix up and test new subjective api. `adb1d1c53 <https://github.com/fedora-infra/fedmsg/commit/adb1d1c53e07b86bb9a8007dc7f11c94e68aae32>`_
+- This isn't necessary. `9da11d8fd <https://github.com/fedora-infra/fedmsg/commit/9da11d8fd673419f04bb925adadafea30392b713>`_
+- Merge pull request #344 from fedora-infra/feature/subjective-api `bf7d79745 <https://github.com/fedora-infra/fedmsg/commit/bf7d797451ce17c4ec27e16b94b01770d8bdde3f>`_
+- Reconcile the subjective API with the conglomerate API. `a268a2033 <https://github.com/fedora-infra/fedmsg/commit/a268a20338f89d5aeef83c2486b54e8be73a67bb>`_
+- Merge pull request #345 from fedora-infra/feature/subjective-conglomeration `ba62c92b8 <https://github.com/fedora-infra/fedmsg/commit/ba62c92b8f8a0d4d36cc9e31a70977b57cdd0421>`_
+- 0.15.0 `c17a04b20 <https://github.com/fedora-infra/fedmsg/commit/c17a04b20f814cd391cdb8d1904f0e0e7c4ceb97>`_
+- core: fix gpg signing `3e98dabce <https://github.com/fedora-infra/fedmsg/commit/3e98dabce2d203e713f3df0986e7b949b6b7dcc0>`_
+- Merge pull request #347 from mathstuf/config-parse-gpg-key `3c65e7b11 <https://github.com/fedora-infra/fedmsg/commit/3c65e7b117d34197df6e2ce2b3ff0aec8f79cd6f>`_
+- Flag moksha as an extra requirement `4677e38bc <https://github.com/fedora-infra/fedmsg/commit/4677e38bca946a3b8e15dd836b5bc9a60adf257b>`_
+- Update README to note Moksha as extra dependency `a299512aa <https://github.com/fedora-infra/fedmsg/commit/a299512aae12468d33bb83cc2c27c7cf17b302b1>`_
+- Remove Moksha unncessary Moksha requirements `428d4fcc6 <https://github.com/fedora-infra/fedmsg/commit/428d4fcc65de1cd23b61e2ddd149cac4d491d222>`_
+- Provide argument to configure signature validation `e223b09ef <https://github.com/fedora-infra/fedmsg/commit/e223b09ef35df1ab3d421e4f14a182187e692414>`_
+- Specify cryptographic dependencies as an extra `457577ba8 <https://github.com/fedora-infra/fedmsg/commit/457577ba8a128265bce4f508b7cbf78e7437d70e>`_
+- Rename 'full' extra to 'hub' `bc922b991 <https://github.com/fedora-infra/fedmsg/commit/bc922b9911f72addc140bff4fb1dac39446910d9>`_
+- Add an 'all' extra to setup.py `3874a66ee <https://github.com/fedora-infra/fedmsg/commit/3874a66ee11c522f5d4dd0683297cc4d3803d798>`_
+- Update FAQ with M2Crypto help `938320ca4 <https://github.com/fedora-infra/fedmsg/commit/938320ca41493d719f780138f28ae9d3abf95e14>`_
+- Revise phrasing and syntax of M2Crypto FAQ `00ac71406 <https://github.com/fedora-infra/fedmsg/commit/00ac71406224dcc4003b75cd2fd780985e513cde>`_
+- Update Development documentation `8704d95cb <https://github.com/fedora-infra/fedmsg/commit/8704d95cb8d3d5e823df54f16a906a5788f6ab44>`_
+- Bump up version number `cd3f13e67 <https://github.com/fedora-infra/fedmsg/commit/cd3f13e674841ae346960cda5b238b68e720de07>`_
+- Update Travis CI configuration `4fa4bf840 <https://github.com/fedora-infra/fedmsg/commit/4fa4bf840e6530e413e210945f23fc1a609b0a4a>`_
+- Restructure extras to (kind of) mirror RPMs `d4665699e <https://github.com/fedora-infra/fedmsg/commit/d4665699ec13f63c8d86caba597e060aadf03358>`_
+- Move the daemon dependency to the consumers extra `dfe594da6 <https://github.com/fedora-infra/fedmsg/commit/dfe594da616112066b9ad3147d269b24007ff44a>`_
+- Remove mention of extras from README `72f2f3f43 <https://github.com/fedora-infra/fedmsg/commit/72f2f3f43349f2c0c320db6745969a2920a0a787>`_
+- Update documentation `ca2da0df0 <https://github.com/fedora-infra/fedmsg/commit/ca2da0df02d36ce0bb5f73adfa957efdb34ff94b>`_
+- Require full set of dependencies for Travis CI `70846b6ee <https://github.com/fedora-infra/fedmsg/commit/70846b6eec812847f2f9111506b91a2b931970b8>`_
+- Don't require 'crypto' dependencies for Travis CI `993ee182d <https://github.com/fedora-infra/fedmsg/commit/993ee182dbfe97a9ebccb101c9f0853ce0f0efa7>`_
+- Python 2.6 compatibility fix `b988931ab <https://github.com/fedora-infra/fedmsg/commit/b988931ab4c32ce72c9a646ce749fef263db5c3a>`_
+- Remove development notes `30869a954 <https://github.com/fedora-infra/fedmsg/commit/30869a9543a4164e4e7d70cd8ee1f3e036c56cd0>`_
+- Replace references to yum with dnf `770465baf <https://github.com/fedora-infra/fedmsg/commit/770465bafff56cf20ad21d0b84061da750d97c31>`_
+- Merge pull request #349 from yazman/extra_deps `d4f010814 <https://github.com/fedora-infra/fedmsg/commit/d4f0108140194f9c46b419f8e1d233d5effe1524>`_
+- core: split tail_message `89fd036c7 <https://github.com/fedora-infra/fedmsg/commit/89fd036c7cc54f7c684de5b505fbb773b958814f>`_
+- Merge pull request #348 from mathstuf/support-external-polling `f61289920 <https://github.com/fedora-infra/fedmsg/commit/f612899209caa503f6360ee65060388e75a10415>`_
+- Add a pre_fire_hook callback to fedmsg.publish. `3acd9a2b8 <https://github.com/fedora-infra/fedmsg/commit/3acd9a2b878d3db18b1dbe71e60178054b045d07>`_
+- Merge pull request #350 from fedora-infra/feature/pre-fire-hook `4d1a4b07b <https://github.com/fedora-infra/fedmsg/commit/4d1a4b07b170225b4c62932e9bcf331de29373ac>`_
 
 0.9.3
 -----
@@ -1626,6 +1819,334 @@ Changelog
 - Merge pull request #292 from fedora-infra/feature/anitya `5bac060f8 <https://github.com/fedora-infra/fedmsg/commit/5bac060f8dccde683f6c493ffd609765d40e4631>`_
 - Optionally shorten links in IRC. `fadf61383 <https://github.com/fedora-infra/fedmsg/commit/fadf61383b03caed73199e6a995a77f6f53b3134>`_
 - Merge pull request #291 from fedora-infra/feature/optional-shortening `162c9b845 <https://github.com/fedora-infra/fedmsg/commit/162c9b845ab33a66196a702787536a76f5f74d27>`_
+- 0.11.0 `0894a5b35 <https://github.com/fedora-infra/fedmsg/commit/0894a5b3572475ec4964f53b51b2238d9b4a0a55>`_
+- Handle koschei use case for tailing while in active mode. `8b7f2ee61 <https://github.com/fedora-infra/fedmsg/commit/8b7f2ee61d3ff2d5eef1ec61b66be5085972f710>`_
+- Merge pull request #294 from fedora-infra/feature/koschei-use-case `31945e1f4 <https://github.com/fedora-infra/fedmsg/commit/31945e1f4cb2f556d9700259359c180295c195cf>`_
+- BugFix #150 : de-duplicate items in bodhi conglomerator `a1b1ee054 <https://github.com/fedora-infra/fedmsg/commit/a1b1ee0548aa32fb2dadb59fe6cd29d2667c9214>`_
+- Merge pull request #296 from Ghost-script/develop `0a9052931 <https://github.com/fedora-infra/fedmsg/commit/0a9052931d96b1bc4e9f1679f15b5e2c291321f2>`_
+- Remove unused import. `b860c87e8 <https://github.com/fedora-infra/fedmsg/commit/b860c87e8af1764ca0583ad3c8effb81a240f9b8>`_
+- Add some passing test cases. `52c4d40d5 <https://github.com/fedora-infra/fedmsg/commit/52c4d40d52af1276c7fe1a10cba1689b964f8b09>`_
+- Restart services on failure (systemd). `f42861fc9 <https://github.com/fedora-infra/fedmsg/commit/f42861fc93c074408ae96c1b797d4e1f0cab6a7a>`_
+- Merge pull request #297 from fedora-infra/feature/restart-on-failure `d175c5479 <https://github.com/fedora-infra/fedmsg/commit/d175c5479e61d9feaf7c73463b8f83ebdf462985>`_
+- 0.11.1 `d245335bd <https://github.com/fedora-infra/fedmsg/commit/d245335bd06340d22a6d4ae99b5437b6919a935e>`_
+- Try to get tests passing in koji again. `261bf1fcb <https://github.com/fedora-infra/fedmsg/commit/261bf1fcb2ae393e3ef96805e7d7b2f93884f90d>`_
+- Merge pull request #298 from fedora-infra/feature/kojifix `23cb93b30 <https://github.com/fedora-infra/fedmsg/commit/23cb93b304d2bcfab637d888e698c9c9d9e0115c>`_
+- Remove unused imports. `a662519d4 <https://github.com/fedora-infra/fedmsg/commit/a662519d42507673e91f82c8250eafc88dbb8d27>`_
+- Increase the lineRate value to 1.0 `b1d916afc <https://github.com/fedora-infra/fedmsg/commit/b1d916afcf864dd972f6e3567fbf59db1aef3138>`_
+- Merge pull request #301 from ampotty/develop `9dd647091 <https://github.com/fedora-infra/fedmsg/commit/9dd647091995536818a9f9c65ac2a3d977a0753f>`_
+- Merge pull request #300 from fedora-infra/feature/remove-unused `7dcec4973 <https://github.com/fedora-infra/fedmsg/commit/7dcec49735826a68ca7be87364d7546c66e42ad7>`_
+- Docs - rename SERVICE to CATEGORY. `230ecfea5 <https://github.com/fedora-infra/fedmsg/commit/230ecfea5004ef90f386c205a89e72fea4040733>`_
+- Merge pull request #303 from fedora-infra/feature/doc-consistency `4762aa4e3 <https://github.com/fedora-infra/fedmsg/commit/4762aa4e37ea832bb20515f8c084e25d61cea75c>`_
+- Simplify fedmsg-relay usage. `43cfcce75 <https://github.com/fedora-infra/fedmsg/commit/43cfcce75e3ac9e315c32faa8c60fe0487144e81>`_
+- Merge pull request #306 from fedora-infra/feature/simplify-relay-usage `be86874e3 <https://github.com/fedora-infra/fedmsg/commit/be86874e33fa258100bf5ac1eb22e3c386f3168a>`_
+- Documentation for reconnect interval options `036286c6b <https://github.com/fedora-infra/fedmsg/commit/036286c6b131e8c6de22cb233412836b0cbdfaad>`_
+- add comment about repo_name `029beca9b <https://github.com/fedora-infra/fedmsg/commit/029beca9b951b24b8101cecb9e65d21a9d7fc0d4>`_
+- Merge pull request #308 from glensc/fix1 `efd1a282d <https://github.com/fedora-infra/fedmsg/commit/efd1a282d68e8cb6139e8507675bc0f4d5e42934>`_
+- Use the much more awesome pygit2. `c3070966d <https://github.com/fedora-infra/fedmsg/commit/c3070966d71192f811a7d867bbfa4ad136a6eec3>`_
+- Calculate diff stats for fedmsg git hook (pygit2!) `3a0169538 <https://github.com/fedora-infra/fedmsg/commit/3a0169538dd4163a58947bc49117be41d54ec0bd>`_
+- Merge branch 'develop' of git://github.com/ampotty/fedmsg into develop `351e868ce <https://github.com/fedora-infra/fedmsg/commit/351e868cea885721a32c400ab403d394494ef5dc>`_
+- Add reconnect interval options to the glossary for #307. `bda6d860c <https://github.com/fedora-infra/fedmsg/commit/bda6d860c7a97ac020c3381a44f53258275a5562>`_
+- Merge pull request #310 from fedora-infra/feature/pygit2 `b4aafee9f <https://github.com/fedora-infra/fedmsg/commit/b4aafee9fe70c1d4e04c84f11d64d3bd00b7dd75>`_
+- Add a comma here to help out people who modify this file. `ded110e23 <https://github.com/fedora-infra/fedmsg/commit/ded110e2357ea400a64d90822efd43213374cfd4>`_
+- Update the status doc. `40650bdfc <https://github.com/fedora-infra/fedmsg/commit/40650bdfce59bd6d31283fc4624ec548470edfa0>`_
+- Start some more deployment docs. `f548ee135 <https://github.com/fedora-infra/fedmsg/commit/f548ee1351be88152ed754c7f2c45a75ff701fb7>`_
+- Merge pull request #311 from fedora-infra/feature/more-deployment-docs `d1611e2b4 <https://github.com/fedora-infra/fedmsg/commit/d1611e2b40cef2760313b532d053699d457f600b>`_
+- Fix ValueError when using gpg and gpg_home is not set `c1db9c55e <https://github.com/fedora-infra/fedmsg/commit/c1db9c55ee41a92773caf332ff4e8852f966fff1>`_
+- Merge pull request #313 from mbooth101/gpg_home_fix `1ae494016 <https://github.com/fedora-infra/fedmsg/commit/1ae4940162670c2493033406be56a06668fad10b>`_
+- Typo fix `923f688ab <https://github.com/fedora-infra/fedmsg/commit/923f688ab1c419c31fa9047ad782cdfef3eea5d8>`_
+- Merge pull request #314 from lewiscowper/patch-1 `fdacb00ad <https://github.com/fedora-infra/fedmsg/commit/fdacb00ad313850917ebe47bef641211f9834a46>`_
+- Add list of topics and categories to grouped messages. `9a12837fb <https://github.com/fedora-infra/fedmsg/commit/9a12837fb1a4c1a8a368d621dc4018545e8e1e8f>`_
+- Merge pull request #315 from fedora-infra/feature/more-grouped-attrs `a120d3615 <https://github.com/fedora-infra/fedmsg/commit/a120d361593d50af3223674493256633221d53d1>`_
+- Surface CRL errors. `8399e7ba6 <https://github.com/fedora-infra/fedmsg/commit/8399e7ba621440af78cf40f7ab333014fc1f78ee>`_
+- Merge pull request #316 from fedora-infra/feature/surface-crl-error `25bea70c6 <https://github.com/fedora-infra/fedmsg/commit/25bea70c651971fb22cfe7e2997c0dcd12fe8f5b>`_
+- 0.12.0 `5610f0b0d <https://github.com/fedora-infra/fedmsg/commit/5610f0b0ddb488a1e74fc259d17b66bc5a532c67>`_
+- Merge branch 'master' of github.com:fedora-infra/fedmsg `bc7622f10 <https://github.com/fedora-infra/fedmsg/commit/bc7622f1020b35d11a3f8b69ca0c0247eb9e999a>`_
+- Merge branch 'master' into develop `c70bed8b2 <https://github.com/fedora-infra/fedmsg/commit/c70bed8b26312334601fcfb2a597cbbe496a94e2>`_
+- Make IRC lineRate configurable. `785fb7889 <https://github.com/fedora-infra/fedmsg/commit/785fb7889669f16d2ea92a22287fbe0df40ce409>`_
+- Merge pull request #317 from fedora-infra/feature/configurable-linerate `cc8e37fff <https://github.com/fedora-infra/fedmsg/commit/cc8e37fffc8b1122f6bf9bd17defa01516317a57>`_
+- Include constituent metadata in the conglomerate message. `a792a6f53 <https://github.com/fedora-infra/fedmsg/commit/a792a6f53c57e5f6ace0dbfc2df9ca195a0bbce5>`_
+- Delete the msg_ids field during tests. `8f307f0c4 <https://github.com/fedora-infra/fedmsg/commit/8f307f0c48e7ed7b69064a32cb4b9ca45eda8c38>`_
+- Merge pull request #318 from fedora-infra/feature/include-consituents `e84928a44 <https://github.com/fedora-infra/fedmsg/commit/e84928a4436c2747dc82c6b0f204a12a60979625>`_
+- Remove unused statement. `57a97d929 <https://github.com/fedora-infra/fedmsg/commit/57a97d9290bf39b47ea3c759ef41479ac39d8ce5>`_
+- Handle multiple topics. `b0dc6632a <https://github.com/fedora-infra/fedmsg/commit/b0dc6632ac207ad2d6a4456630494fee35967069>`_
+- Merge pull request #319 from fedora-infra/feature/handle-multiple-topics `4013d5707 <https://github.com/fedora-infra/fedmsg/commit/4013d57074e38400a76d6251ad96f1ebcd5c7310>`_
+- Scrub args from keywords before initializing. `97e0a0d4e <https://github.com/fedora-infra/fedmsg/commit/97e0a0d4e31e9a541faab3a59bc222837b2ffa7b>`_
+- Merge pull request #321 from fedora-infra/feature/scrub-api-args `06212349a <https://github.com/fedora-infra/fedmsg/commit/06212349a8002bd5fe791efc5a4f4ba9f8078b50>`_
+- 0.12.1 `dd7d48e84 <https://github.com/fedora-infra/fedmsg/commit/dd7d48e840890f86d48e009206e0e5d4feb8924a>`_
+- Typofix.  Don't scrub args from the original call to func. `0e3bc165a <https://github.com/fedora-infra/fedmsg/commit/0e3bc165ad0667f7cc3f42bbcc3f140537100fb0>`_
+- 0.12.2 `a1b7d920f <https://github.com/fedora-infra/fedmsg/commit/a1b7d920f133f8b24ced6e2682ea81e254dffee6>`_
+- Bail on git objects if they are a tag. `892db3116 <https://github.com/fedora-infra/fedmsg/commit/892db3116f250fae4427219b6890b61a61de081b>`_
+- Attempt to avoid infinite recursion when finding the list of new revs. `3182fe460 <https://github.com/fedora-infra/fedmsg/commit/3182fe46043848c66e287b671e5e352192c535fe>`_
+- Improve git hook to only report on new commits `c0ef2bed7 <https://github.com/fedora-infra/fedmsg/commit/c0ef2bed70aa75bdbb3ca79dd8d544467d5de901>`_
+- Fix up some type errors. `f860757fc <https://github.com/fedora-infra/fedmsg/commit/f860757fc4a04d5d92a2859d3c22e9e01e069ce3>`_
+- Add a print statement. `1e256ff30 <https://github.com/fedora-infra/fedmsg/commit/1e256ff30c4b0e960441840ea14c17fc13cad547>`_
+- Merge pull request #322 from fedora-infra/feature/git-hook-updates `6c9df7f45 <https://github.com/fedora-infra/fedmsg/commit/6c9df7f45f8e258723d9421a4f86499e81b24074>`_
+- Avoid recursively walking the entire git history. `e4dd3ddff <https://github.com/fedora-infra/fedmsg/commit/e4dd3ddff802ebd1c733ab1bbe48313b9e72e3f8>`_
+- Merge pull request #323 from fedora-infra/feature/avoid-recursion `3410233f1 <https://github.com/fedora-infra/fedmsg/commit/3410233f154bce9f7303bf058439af92a2d2288e>`_
+- Add more debug info to test suite failures. `fcaea0e25 <https://github.com/fedora-infra/fedmsg/commit/fcaea0e259ae7d54e90f04189fdc7ccc4705ba0a>`_
+- Typofix. `01b1e84a8 <https://github.com/fedora-infra/fedmsg/commit/01b1e84a82ba68efda42be67bb378885c12290e5>`_
+- Getting the source lines is error prone.  No need. `3a66314be <https://github.com/fedora-infra/fedmsg/commit/3a66314be7a9b32b8f735e4bd2e372d75ca6d9af>`_
+- Another typofix. `b9aade39b <https://github.com/fedora-infra/fedmsg/commit/b9aade39ba31383a9bbcf801dda1c64eb7936f40>`_
+- Re-use the produce_template function for consistency. `bacb42c21 <https://github.com/fedora-infra/fedmsg/commit/bacb42c21181fadc13aa9b8a32f2a80a8a7bc308>`_
+- No more infinite loops. `4d9e9ac2d <https://github.com/fedora-infra/fedmsg/commit/4d9e9ac2d0024443f7faafb07917d5e11d3f16c8>`_
+- Merge pull request #326 from fedora-infra/feature/FFFFFFUUUUUUUU `c2e96ecd0 <https://github.com/fedora-infra/fedmsg/commit/c2e96ecd01ff101685c4ba08d126998f447fbce7>`_
+- Merge pull request #325 from fedora-infra/feature/conglomerate-consistency `3c1318c6a <https://github.com/fedora-infra/fedmsg/commit/3c1318c6a792363f6fd5bb6fd6e05f16091c7a90>`_
+- Merge pull request #324 from fedora-infra/feature/more-test-debuginfo `ba4da5fcc <https://github.com/fedora-infra/fedmsg/commit/ba4da5fccea2354877bf0e3585bfad8197c3ce71>`_
+- Shell out to rev-list to get the list of commits. `81d2c7d85 <https://github.com/fedora-infra/fedmsg/commit/81d2c7d85545906cb5bf6415fcb499a729a0c851>`_
+- Keep track of duplicate git messages. `5e66ea633 <https://github.com/fedora-infra/fedmsg/commit/5e66ea633a9cf775ea94e1520b39575d89e5deb8>`_
+- Merge pull request #327 from fedora-infra/feature/git-hook-improvements `108be6b6e <https://github.com/fedora-infra/fedmsg/commit/108be6b6e8ae2b75f25d664dce1b4560b286f092>`_
+- 0.12.3 `25ff1415a <https://github.com/fedora-infra/fedmsg/commit/25ff1415a217694396827d6e7a804d83630c92ca>`_
+- Obviously, this should come first. `5107143a0 <https://github.com/fedora-infra/fedmsg/commit/5107143a00e0634ccd6eaa07a16c53768674e490>`_
+- Publish git commits in chronological order. `5b3d7548b <https://github.com/fedora-infra/fedmsg/commit/5b3d7548b5dd2470142565daaece5b91ea2efd94>`_
+- Merge pull request #328 from fedora-infra/feature/git-hook-in-order `5d1c585dd <https://github.com/fedora-infra/fedmsg/commit/5d1c585dd17ea4ef14deaee38c6c59e7da26fd08>`_
+- Add some debug statements. `a54c2e9cf <https://github.com/fedora-infra/fedmsg/commit/a54c2e9cfa1bd3c5ecb9f945ecc618d549bc0b4c>`_
+- Merge pull request #329 from fedora-infra/feature/debug-statement `90e6a82b8 <https://github.com/fedora-infra/fedmsg/commit/90e6a82b85b3df562d7cecb780270e1ece7308b8>`_
+- First draft of a script to scan a fedmsg installation. `289adc887 <https://github.com/fedora-infra/fedmsg/commit/289adc8874bb0988f1ecd67fbf3bae152a3e432c>`_
+- Enhance fedmsg-map to produce output for collectd. `d5089110f <https://github.com/fedora-infra/fedmsg/commit/d5089110f141aa7a1009215407f3d60d46d1e885>`_
+- Add a verbose mode and bump up the timeout setting. `00c11646f <https://github.com/fedora-infra/fedmsg/commit/00c11646f4b6298a3451686a04c99ff8f532b56f>`_
+- Merge pull request #331 from fedora-infra/feature/fedmsg-map `1b01533aa <https://github.com/fedora-infra/fedmsg/commit/1b01533aaa60f8986c20392b95d88a9e6885cb74>`_
+- Initial shot at Python 3 support `05a7a4789 <https://github.com/fedora-infra/fedmsg/commit/05a7a4789ca65c3e0b974570c59c4ad2f6db15da>`_
+- Merge pull request #332 from bkabrda/develop `bfb49e9ef <https://github.com/fedora-infra/fedmsg/commit/bfb49e9ef9af3e27e32e23f3715f9abafd0002a8>`_
+- correct config file locations `5d549b004 <https://github.com/fedora-infra/fedmsg/commit/5d549b00402fa7959ab43bae18a4f8597714ae8d>`_
+- removed unsused import `f2a9350f1 <https://github.com/fedora-infra/fedmsg/commit/f2a9350f1e69f8dbd7d13860b90fbdce7aa9dc51>`_
+- Merge pull request #333 from Nolski/develop `30b4f1c15 <https://github.com/fedora-infra/fedmsg/commit/30b4f1c15850172ceba4af2e31ffe50c97b26964>`_
+- Rewrite 'sign' function using cryptography `55af2a831 <https://github.com/fedora-infra/fedmsg/commit/55af2a83157c06a04af9b00e9700ad6ea9630286>`_
+- Make list_to_series return uniqified items in predictable order. `ec250e096 <https://github.com/fedora-infra/fedmsg/commit/ec250e096a84164ab45a93424530285ec39583af>`_
+- Merge pull request #334 from bkabrda/develop `f661df461 <https://github.com/fedora-infra/fedmsg/commit/f661df461359606d4c6f32b890d9ed173185b592>`_
+- 0.13.0 `af47379b6 <https://github.com/fedora-infra/fedmsg/commit/af47379b66124f250cc2979e1a69437439d3f9e9>`_
+- Some collectd tweaks. `a282cd0f6 <https://github.com/fedora-infra/fedmsg/commit/a282cd0f62b90f401a36535860d1ebb946c8b6dd>`_
+- Start testing with tox. `8b06ec046 <https://github.com/fedora-infra/fedmsg/commit/8b06ec0466fd9204b859089e55f9b3eed45218b6>`_
+- Dodge the metaclass if on an ancient python-six. `3f2cf80a7 <https://github.com/fedora-infra/fedmsg/commit/3f2cf80a789a295514a3d2379a52ef61caa0dd09>`_
+- Make "arrow" optional to avoid version anger with python-six. `1de8cf72f <https://github.com/fedora-infra/fedmsg/commit/1de8cf72f327e966a38fe0b39e89f007cdb31c0b>`_
+- Merge pull request #335 from fedora-infra/feature/six-careful `6573ed7a6 <https://github.com/fedora-infra/fedmsg/commit/6573ed7a6fb75bad081ea9fe0733c5c383dacada>`_
+- 0.13.1 `e293b2da5 <https://github.com/fedora-infra/fedmsg/commit/e293b2da56a876ada0c81beefc52f7bcd96379db>`_
+- Make order of configuration files predictable `bb3fa15ac <https://github.com/fedora-infra/fedmsg/commit/bb3fa15ac6e39cf0f8b11672262303d69eaddd72>`_
+- Merge pull request #336 from msimacek/develop `5f0f7c972 <https://github.com/fedora-infra/fedmsg/commit/5f0f7c9726835034897919805fd774104a4019cb>`_
+- Include changes from our ansible repo. `e33630f29 <https://github.com/fedora-infra/fedmsg/commit/e33630f29b7b93f2388d1a85d595eec937479d1f>`_
+- Merge branch 'develop' of github.com:fedora-infra/fedmsg into develop `1d82d2a02 <https://github.com/fedora-infra/fedmsg/commit/1d82d2a02eae375b2492bc8054cfbbcb71f01609>`_
+- Use a threadpool to speed this up. `79aa516ea <https://github.com/fedora-infra/fedmsg/commit/79aa516ea175428eee3a51cacba72b891a91725a>`_
+- Merge pull request #337 from fedora-infra/feature/fedmsg-map-threadpool `47c2e5e45 <https://github.com/fedora-infra/fedmsg/commit/47c2e5e456e178ee53de2d0998ab28fd1683e68c>`_
+- Flatten the threadpool workload. `e54f4357b <https://github.com/fedora-infra/fedmsg/commit/e54f4357b364f783b49c8bb3ce0579c96dd22369>`_
+- Merge pull request #338 from fedora-infra/feature/more-threads `f84dbab4f <https://github.com/fedora-infra/fedmsg/commit/f84dbab4f319f8e62e8e60e5d68b24033367543b>`_
+- add a msg2subjective method to fedmsg.meta `b21c26fa8 <https://github.com/fedora-infra/fedmsg/commit/b21c26fa89f737a0eee057be988224cbc2172787>`_
+- add a subjective() method to the BaseProcessor `bcca93046 <https://github.com/fedora-infra/fedmsg/commit/bcca930468b316b024758cc25d034cf57f089142>`_
+- test subjective messages in base test class `1b24093db <https://github.com/fedora-infra/fedmsg/commit/1b24093db674cb54abcaa9e7923a38ed3838c3a2>`_
+- if a processor doesn't have a subjective method, fall back to subtitle `ec464eb30 <https://github.com/fedora-infra/fedmsg/commit/ec464eb30685ab6a6cd61575536401bda549cb6a>`_
+- need to pass the subject to the processor `38235830a <https://github.com/fedora-infra/fedmsg/commit/38235830a65041dce1eff13ea3e31673ad3f29a6>`_
+- I suppose we could give this a default value `71e5a7eda <https://github.com/fedora-infra/fedmsg/commit/71e5a7edac0daae245aa1e3c411a58d5e4a1b935>`_
+- I believe we have to pass a username here for the subject `ad2f646ee <https://github.com/fedora-infra/fedmsg/commit/ad2f646ee422e4c477e57c481d954355092e223b>`_
+- we don't need a default for this, since there's no point in a subjective message without a subject `c9e4a522b <https://github.com/fedora-infra/fedmsg/commit/c9e4a522b8c55b0883021aa33d07e0c50c7c980e>`_
+- No need to rebuild fedmsg.meta processors `f9e064883 <https://github.com/fedora-infra/fedmsg/commit/f9e0648834336d814b467995dc789ab04f204060>`_
+- Move global declaration to the top. `c6c0c19a7 <https://github.com/fedora-infra/fedmsg/commit/c6c0c19a749850a2ed7d4dd677a0578e543ff257>`_
+- Fix a couple tests which try to reinitialize the processors with mocked config. `06ecdb5cd <https://github.com/fedora-infra/fedmsg/commit/06ecdb5cdf348aec6113d0ec96e32d534f80af03>`_
+- Merge pull request #341 from fedora-infra/feature/no-need-to-rebuild `4d4126775 <https://github.com/fedora-infra/fedmsg/commit/4d4126775f900bc21446d9965ff90e7c4920fbc8>`_
+- 0.13.2 `6674a1686 <https://github.com/fedora-infra/fedmsg/commit/6674a1686aa354458faf2758ddc7f8d55458cc1e>`_
+- Don't overwrite processors in the tests to keep things faster. `b104fac57 <https://github.com/fedora-infra/fedmsg/commit/b104fac570796967fe124268b925c6230c0bdfce>`_
+- 0.13.3 `75cdf2648 <https://github.com/fedora-infra/fedmsg/commit/75cdf2648e3b7ea17f61f1f40baefa799174ac30>`_
+- These tests require network.. so don\'t fail without a special env var set. `e6601d6e3 <https://github.com/fedora-infra/fedmsg/commit/e6601d6e30b569ee46f7da59e6b2d2ec140e79ee>`_
+- Need to reset processors for this test to pass.  It only works the first time. `dcfee1e2f <https://github.com/fedora-infra/fedmsg/commit/dcfee1e2f8bd7d0abc6db042bbd801d84bb80a81>`_
+- pylint cleanup of some test files. `9cc3ff5ef <https://github.com/fedora-infra/fedmsg/commit/9cc3ff5ef291e7ba04e40a47139677e7d845ecf2>`_
+- Markup some other tests that require network. `259fd3cdd <https://github.com/fedora-infra/fedmsg/commit/259fd3cdd83904b4aacfcbf777f400100500e2e2>`_
+- Merge branch 'cryptography' into feature/py34-finish `302df19c4 <https://github.com/fedora-infra/fedmsg/commit/302df19c4c47ab73cadac478b3f020908da35e56>`_
+- Merge pull request #342 from fedora-infra/feature/fix-tests `3a5d9e6c7 <https://github.com/fedora-infra/fedmsg/commit/3a5d9e6c76a9b31b701363a40e7a03e20ac412ed>`_
+- A little more cleanup. `c8353faa2 <https://github.com/fedora-infra/fedmsg/commit/c8353faa27c0805da37ac159d12602130c7c2731>`_
+- Split x509 into two modules.  One for py2 and one for py3. `136a42000 <https://github.com/fedora-infra/fedmsg/commit/136a42000f47abe8ff01593297cfe07128801970>`_
+- Switch between the two module accordingly. `22fa72c40 <https://github.com/fedora-infra/fedmsg/commit/22fa72c40ee999fd5b27e25ad85c2be9dbd56eba>`_
+- Restore functionality removed on accident. `16a38eb64 <https://github.com/fedora-infra/fedmsg/commit/16a38eb6477ef45a9e7cad459c4d1f46840a960c>`_
+- Conditionalize skippable imports in for the x509 tests. `6bb5fd0c4 <https://github.com/fedora-infra/fedmsg/commit/6bb5fd0c4e0d6adf38de72a59948fdf690d145d9>`_
+- Merge pull request #343 from fedora-infra/feature/py34-finish `c4808d8ce <https://github.com/fedora-infra/fedmsg/commit/c4808d8ce35c9982e38bee61942559984cad9421>`_
+- 0.14.0 `bb527e15b <https://github.com/fedora-infra/fedmsg/commit/bb527e15b46c9ebcf127240022736362aadc2aad>`_
+- Fix two py3 encoding oversights. `6ac68cf46 <https://github.com/fedora-infra/fedmsg/commit/6ac68cf46269000f6be31bac88a119c9126b72ad>`_
+- Get the encoding story straight here. `f317544ce <https://github.com/fedora-infra/fedmsg/commit/f317544ce9591f78cc04f0db38d7861d97e6ca4a>`_
+- 0.14.1 `07e8e11ef <https://github.com/fedora-infra/fedmsg/commit/07e8e11ef7e787628c830d28d72ca08f1f173ca5>`_
+- Fix small typo in doc. `acc233196 <https://github.com/fedora-infra/fedmsg/commit/acc233196cf27598071e87d8d641c59e1899b5aa>`_
+- Fix up and test new subjective api. `adb1d1c53 <https://github.com/fedora-infra/fedmsg/commit/adb1d1c53e07b86bb9a8007dc7f11c94e68aae32>`_
+- This isn't necessary. `9da11d8fd <https://github.com/fedora-infra/fedmsg/commit/9da11d8fd673419f04bb925adadafea30392b713>`_
+- Merge pull request #344 from fedora-infra/feature/subjective-api `bf7d79745 <https://github.com/fedora-infra/fedmsg/commit/bf7d797451ce17c4ec27e16b94b01770d8bdde3f>`_
+- Reconcile the subjective API with the conglomerate API. `a268a2033 <https://github.com/fedora-infra/fedmsg/commit/a268a20338f89d5aeef83c2486b54e8be73a67bb>`_
+- Merge pull request #345 from fedora-infra/feature/subjective-conglomeration `ba62c92b8 <https://github.com/fedora-infra/fedmsg/commit/ba62c92b8f8a0d4d36cc9e31a70977b57cdd0421>`_
+
+0.15.0
+------
+
+- add a msg2subjective method to fedmsg.meta `b21c26fa8 <https://github.com/fedora-infra/fedmsg/commit/b21c26fa89f737a0eee057be988224cbc2172787>`_
+- add a subjective() method to the BaseProcessor `bcca93046 <https://github.com/fedora-infra/fedmsg/commit/bcca930468b316b024758cc25d034cf57f089142>`_
+- test subjective messages in base test class `1b24093db <https://github.com/fedora-infra/fedmsg/commit/1b24093db674cb54abcaa9e7923a38ed3838c3a2>`_
+- if a processor doesn't have a subjective method, fall back to subtitle `ec464eb30 <https://github.com/fedora-infra/fedmsg/commit/ec464eb30685ab6a6cd61575536401bda549cb6a>`_
+- need to pass the subject to the processor `38235830a <https://github.com/fedora-infra/fedmsg/commit/38235830a65041dce1eff13ea3e31673ad3f29a6>`_
+- I suppose we could give this a default value `71e5a7eda <https://github.com/fedora-infra/fedmsg/commit/71e5a7edac0daae245aa1e3c411a58d5e4a1b935>`_
+- I believe we have to pass a username here for the subject `ad2f646ee <https://github.com/fedora-infra/fedmsg/commit/ad2f646ee422e4c477e57c481d954355092e223b>`_
+- we don't need a default for this, since there's no point in a subjective message without a subject `c9e4a522b <https://github.com/fedora-infra/fedmsg/commit/c9e4a522b8c55b0883021aa33d07e0c50c7c980e>`_
+- Fix small typo in doc. `acc233196 <https://github.com/fedora-infra/fedmsg/commit/acc233196cf27598071e87d8d641c59e1899b5aa>`_
+- Fix up and test new subjective api. `adb1d1c53 <https://github.com/fedora-infra/fedmsg/commit/adb1d1c53e07b86bb9a8007dc7f11c94e68aae32>`_
+- This isn't necessary. `9da11d8fd <https://github.com/fedora-infra/fedmsg/commit/9da11d8fd673419f04bb925adadafea30392b713>`_
+- Merge pull request #344 from fedora-infra/feature/subjective-api `bf7d79745 <https://github.com/fedora-infra/fedmsg/commit/bf7d797451ce17c4ec27e16b94b01770d8bdde3f>`_
+- Reconcile the subjective API with the conglomerate API. `a268a2033 <https://github.com/fedora-infra/fedmsg/commit/a268a20338f89d5aeef83c2486b54e8be73a67bb>`_
+- Merge pull request #345 from fedora-infra/feature/subjective-conglomeration `ba62c92b8 <https://github.com/fedora-infra/fedmsg/commit/ba62c92b8f8a0d4d36cc9e31a70977b57cdd0421>`_
+
+0.14.1
+------
+
+- Fix two py3 encoding oversights. `6ac68cf46 <https://github.com/fedora-infra/fedmsg/commit/6ac68cf46269000f6be31bac88a119c9126b72ad>`_
+- Get the encoding story straight here. `f317544ce <https://github.com/fedora-infra/fedmsg/commit/f317544ce9591f78cc04f0db38d7861d97e6ca4a>`_
+
+0.14.0
+------
+
+- Rewrite 'sign' function using cryptography `55af2a831 <https://github.com/fedora-infra/fedmsg/commit/55af2a83157c06a04af9b00e9700ad6ea9630286>`_
+- These tests require network.. so don\'t fail without a special env var set. `e6601d6e3 <https://github.com/fedora-infra/fedmsg/commit/e6601d6e30b569ee46f7da59e6b2d2ec140e79ee>`_
+- Need to reset processors for this test to pass.  It only works the first time. `dcfee1e2f <https://github.com/fedora-infra/fedmsg/commit/dcfee1e2f8bd7d0abc6db042bbd801d84bb80a81>`_
+- pylint cleanup of some test files. `9cc3ff5ef <https://github.com/fedora-infra/fedmsg/commit/9cc3ff5ef291e7ba04e40a47139677e7d845ecf2>`_
+- Markup some other tests that require network. `259fd3cdd <https://github.com/fedora-infra/fedmsg/commit/259fd3cdd83904b4aacfcbf777f400100500e2e2>`_
+- Merge branch 'cryptography' into feature/py34-finish `302df19c4 <https://github.com/fedora-infra/fedmsg/commit/302df19c4c47ab73cadac478b3f020908da35e56>`_
+- Merge pull request #342 from fedora-infra/feature/fix-tests `3a5d9e6c7 <https://github.com/fedora-infra/fedmsg/commit/3a5d9e6c76a9b31b701363a40e7a03e20ac412ed>`_
+- A little more cleanup. `c8353faa2 <https://github.com/fedora-infra/fedmsg/commit/c8353faa27c0805da37ac159d12602130c7c2731>`_
+- Split x509 into two modules.  One for py2 and one for py3. `136a42000 <https://github.com/fedora-infra/fedmsg/commit/136a42000f47abe8ff01593297cfe07128801970>`_
+- Switch between the two module accordingly. `22fa72c40 <https://github.com/fedora-infra/fedmsg/commit/22fa72c40ee999fd5b27e25ad85c2be9dbd56eba>`_
+- Restore functionality removed on accident. `16a38eb64 <https://github.com/fedora-infra/fedmsg/commit/16a38eb6477ef45a9e7cad459c4d1f46840a960c>`_
+- Conditionalize skippable imports in for the x509 tests. `6bb5fd0c4 <https://github.com/fedora-infra/fedmsg/commit/6bb5fd0c4e0d6adf38de72a59948fdf690d145d9>`_
+- Merge pull request #343 from fedora-infra/feature/py34-finish `c4808d8ce <https://github.com/fedora-infra/fedmsg/commit/c4808d8ce35c9982e38bee61942559984cad9421>`_
+
+0.13.3
+------
+
+- Don't overwrite processors in the tests to keep things faster. `b104fac57 <https://github.com/fedora-infra/fedmsg/commit/b104fac570796967fe124268b925c6230c0bdfce>`_
+
+0.13.2
+------
+
+- Make order of configuration files predictable `bb3fa15ac <https://github.com/fedora-infra/fedmsg/commit/bb3fa15ac6e39cf0f8b11672262303d69eaddd72>`_
+- Merge pull request #336 from msimacek/develop `5f0f7c972 <https://github.com/fedora-infra/fedmsg/commit/5f0f7c9726835034897919805fd774104a4019cb>`_
+- Include changes from our ansible repo. `e33630f29 <https://github.com/fedora-infra/fedmsg/commit/e33630f29b7b93f2388d1a85d595eec937479d1f>`_
+- Merge branch 'develop' of github.com:fedora-infra/fedmsg into develop `1d82d2a02 <https://github.com/fedora-infra/fedmsg/commit/1d82d2a02eae375b2492bc8054cfbbcb71f01609>`_
+- Use a threadpool to speed this up. `79aa516ea <https://github.com/fedora-infra/fedmsg/commit/79aa516ea175428eee3a51cacba72b891a91725a>`_
+- Merge pull request #337 from fedora-infra/feature/fedmsg-map-threadpool `47c2e5e45 <https://github.com/fedora-infra/fedmsg/commit/47c2e5e456e178ee53de2d0998ab28fd1683e68c>`_
+- Flatten the threadpool workload. `e54f4357b <https://github.com/fedora-infra/fedmsg/commit/e54f4357b364f783b49c8bb3ce0579c96dd22369>`_
+- Merge pull request #338 from fedora-infra/feature/more-threads `f84dbab4f <https://github.com/fedora-infra/fedmsg/commit/f84dbab4f319f8e62e8e60e5d68b24033367543b>`_
+- No need to rebuild fedmsg.meta processors `f9e064883 <https://github.com/fedora-infra/fedmsg/commit/f9e0648834336d814b467995dc789ab04f204060>`_
+- Move global declaration to the top. `c6c0c19a7 <https://github.com/fedora-infra/fedmsg/commit/c6c0c19a749850a2ed7d4dd677a0578e543ff257>`_
+- Fix a couple tests which try to reinitialize the processors with mocked config. `06ecdb5cd <https://github.com/fedora-infra/fedmsg/commit/06ecdb5cdf348aec6113d0ec96e32d534f80af03>`_
+- Merge pull request #341 from fedora-infra/feature/no-need-to-rebuild `4d4126775 <https://github.com/fedora-infra/fedmsg/commit/4d4126775f900bc21446d9965ff90e7c4920fbc8>`_
+
+0.13.1
+------
+
+- Some collectd tweaks. `a282cd0f6 <https://github.com/fedora-infra/fedmsg/commit/a282cd0f62b90f401a36535860d1ebb946c8b6dd>`_
+- Start testing with tox. `8b06ec046 <https://github.com/fedora-infra/fedmsg/commit/8b06ec0466fd9204b859089e55f9b3eed45218b6>`_
+- Dodge the metaclass if on an ancient python-six. `3f2cf80a7 <https://github.com/fedora-infra/fedmsg/commit/3f2cf80a789a295514a3d2379a52ef61caa0dd09>`_
+- Make "arrow" optional to avoid version anger with python-six. `1de8cf72f <https://github.com/fedora-infra/fedmsg/commit/1de8cf72f327e966a38fe0b39e89f007cdb31c0b>`_
+- Merge pull request #335 from fedora-infra/feature/six-careful `6573ed7a6 <https://github.com/fedora-infra/fedmsg/commit/6573ed7a6fb75bad081ea9fe0733c5c383dacada>`_
+
+0.13.0
+------
+
+- Obviously, this should come first. `5107143a0 <https://github.com/fedora-infra/fedmsg/commit/5107143a00e0634ccd6eaa07a16c53768674e490>`_
+- Publish git commits in chronological order. `5b3d7548b <https://github.com/fedora-infra/fedmsg/commit/5b3d7548b5dd2470142565daaece5b91ea2efd94>`_
+- Merge pull request #328 from fedora-infra/feature/git-hook-in-order `5d1c585dd <https://github.com/fedora-infra/fedmsg/commit/5d1c585dd17ea4ef14deaee38c6c59e7da26fd08>`_
+- Add some debug statements. `a54c2e9cf <https://github.com/fedora-infra/fedmsg/commit/a54c2e9cfa1bd3c5ecb9f945ecc618d549bc0b4c>`_
+- Merge pull request #329 from fedora-infra/feature/debug-statement `90e6a82b8 <https://github.com/fedora-infra/fedmsg/commit/90e6a82b85b3df562d7cecb780270e1ece7308b8>`_
+- First draft of a script to scan a fedmsg installation. `289adc887 <https://github.com/fedora-infra/fedmsg/commit/289adc8874bb0988f1ecd67fbf3bae152a3e432c>`_
+- Enhance fedmsg-map to produce output for collectd. `d5089110f <https://github.com/fedora-infra/fedmsg/commit/d5089110f141aa7a1009215407f3d60d46d1e885>`_
+- Add a verbose mode and bump up the timeout setting. `00c11646f <https://github.com/fedora-infra/fedmsg/commit/00c11646f4b6298a3451686a04c99ff8f532b56f>`_
+- Merge pull request #331 from fedora-infra/feature/fedmsg-map `1b01533aa <https://github.com/fedora-infra/fedmsg/commit/1b01533aaa60f8986c20392b95d88a9e6885cb74>`_
+- Initial shot at Python 3 support `05a7a4789 <https://github.com/fedora-infra/fedmsg/commit/05a7a4789ca65c3e0b974570c59c4ad2f6db15da>`_
+- Merge pull request #332 from bkabrda/develop `bfb49e9ef <https://github.com/fedora-infra/fedmsg/commit/bfb49e9ef9af3e27e32e23f3715f9abafd0002a8>`_
+- correct config file locations `5d549b004 <https://github.com/fedora-infra/fedmsg/commit/5d549b00402fa7959ab43bae18a4f8597714ae8d>`_
+- removed unsused import `f2a9350f1 <https://github.com/fedora-infra/fedmsg/commit/f2a9350f1e69f8dbd7d13860b90fbdce7aa9dc51>`_
+- Merge pull request #333 from Nolski/develop `30b4f1c15 <https://github.com/fedora-infra/fedmsg/commit/30b4f1c15850172ceba4af2e31ffe50c97b26964>`_
+- Make list_to_series return uniqified items in predictable order. `ec250e096 <https://github.com/fedora-infra/fedmsg/commit/ec250e096a84164ab45a93424530285ec39583af>`_
+- Merge pull request #334 from bkabrda/develop `f661df461 <https://github.com/fedora-infra/fedmsg/commit/f661df461359606d4c6f32b890d9ed173185b592>`_
+
+0.12.3
+------
+
+- Bail on git objects if they are a tag. `892db3116 <https://github.com/fedora-infra/fedmsg/commit/892db3116f250fae4427219b6890b61a61de081b>`_
+- Attempt to avoid infinite recursion when finding the list of new revs. `3182fe460 <https://github.com/fedora-infra/fedmsg/commit/3182fe46043848c66e287b671e5e352192c535fe>`_
+- Improve git hook to only report on new commits `c0ef2bed7 <https://github.com/fedora-infra/fedmsg/commit/c0ef2bed70aa75bdbb3ca79dd8d544467d5de901>`_
+- Fix up some type errors. `f860757fc <https://github.com/fedora-infra/fedmsg/commit/f860757fc4a04d5d92a2859d3c22e9e01e069ce3>`_
+- Add a print statement. `1e256ff30 <https://github.com/fedora-infra/fedmsg/commit/1e256ff30c4b0e960441840ea14c17fc13cad547>`_
+- Merge pull request #322 from fedora-infra/feature/git-hook-updates `6c9df7f45 <https://github.com/fedora-infra/fedmsg/commit/6c9df7f45f8e258723d9421a4f86499e81b24074>`_
+- Avoid recursively walking the entire git history. `e4dd3ddff <https://github.com/fedora-infra/fedmsg/commit/e4dd3ddff802ebd1c733ab1bbe48313b9e72e3f8>`_
+- Merge pull request #323 from fedora-infra/feature/avoid-recursion `3410233f1 <https://github.com/fedora-infra/fedmsg/commit/3410233f154bce9f7303bf058439af92a2d2288e>`_
+- Add more debug info to test suite failures. `fcaea0e25 <https://github.com/fedora-infra/fedmsg/commit/fcaea0e259ae7d54e90f04189fdc7ccc4705ba0a>`_
+- Typofix. `01b1e84a8 <https://github.com/fedora-infra/fedmsg/commit/01b1e84a82ba68efda42be67bb378885c12290e5>`_
+- Getting the source lines is error prone.  No need. `3a66314be <https://github.com/fedora-infra/fedmsg/commit/3a66314be7a9b32b8f735e4bd2e372d75ca6d9af>`_
+- Another typofix. `b9aade39b <https://github.com/fedora-infra/fedmsg/commit/b9aade39ba31383a9bbcf801dda1c64eb7936f40>`_
+- Re-use the produce_template function for consistency. `bacb42c21 <https://github.com/fedora-infra/fedmsg/commit/bacb42c21181fadc13aa9b8a32f2a80a8a7bc308>`_
+- No more infinite loops. `4d9e9ac2d <https://github.com/fedora-infra/fedmsg/commit/4d9e9ac2d0024443f7faafb07917d5e11d3f16c8>`_
+- Merge pull request #326 from fedora-infra/feature/FFFFFFUUUUUUUU `c2e96ecd0 <https://github.com/fedora-infra/fedmsg/commit/c2e96ecd01ff101685c4ba08d126998f447fbce7>`_
+- Merge pull request #325 from fedora-infra/feature/conglomerate-consistency `3c1318c6a <https://github.com/fedora-infra/fedmsg/commit/3c1318c6a792363f6fd5bb6fd6e05f16091c7a90>`_
+- Merge pull request #324 from fedora-infra/feature/more-test-debuginfo `ba4da5fcc <https://github.com/fedora-infra/fedmsg/commit/ba4da5fccea2354877bf0e3585bfad8197c3ce71>`_
+- Shell out to rev-list to get the list of commits. `81d2c7d85 <https://github.com/fedora-infra/fedmsg/commit/81d2c7d85545906cb5bf6415fcb499a729a0c851>`_
+- Keep track of duplicate git messages. `5e66ea633 <https://github.com/fedora-infra/fedmsg/commit/5e66ea633a9cf775ea94e1520b39575d89e5deb8>`_
+- Merge pull request #327 from fedora-infra/feature/git-hook-improvements `108be6b6e <https://github.com/fedora-infra/fedmsg/commit/108be6b6e8ae2b75f25d664dce1b4560b286f092>`_
+
+0.12.2
+------
+
+- Typofix.  Don't scrub args from the original call to func. `0e3bc165a <https://github.com/fedora-infra/fedmsg/commit/0e3bc165ad0667f7cc3f42bbcc3f140537100fb0>`_
+
+0.12.1
+------
+
+- Typo fix `923f688ab <https://github.com/fedora-infra/fedmsg/commit/923f688ab1c419c31fa9047ad782cdfef3eea5d8>`_
+- Merge pull request #314 from lewiscowper/patch-1 `fdacb00ad <https://github.com/fedora-infra/fedmsg/commit/fdacb00ad313850917ebe47bef641211f9834a46>`_
+- Merge branch 'master' of github.com:fedora-infra/fedmsg `bc7622f10 <https://github.com/fedora-infra/fedmsg/commit/bc7622f1020b35d11a3f8b69ca0c0247eb9e999a>`_
+- Merge branch 'master' into develop `c70bed8b2 <https://github.com/fedora-infra/fedmsg/commit/c70bed8b26312334601fcfb2a597cbbe496a94e2>`_
+- Make IRC lineRate configurable. `785fb7889 <https://github.com/fedora-infra/fedmsg/commit/785fb7889669f16d2ea92a22287fbe0df40ce409>`_
+- Merge pull request #317 from fedora-infra/feature/configurable-linerate `cc8e37fff <https://github.com/fedora-infra/fedmsg/commit/cc8e37fffc8b1122f6bf9bd17defa01516317a57>`_
+- Include constituent metadata in the conglomerate message. `a792a6f53 <https://github.com/fedora-infra/fedmsg/commit/a792a6f53c57e5f6ace0dbfc2df9ca195a0bbce5>`_
+- Delete the msg_ids field during tests. `8f307f0c4 <https://github.com/fedora-infra/fedmsg/commit/8f307f0c48e7ed7b69064a32cb4b9ca45eda8c38>`_
+- Merge pull request #318 from fedora-infra/feature/include-consituents `e84928a44 <https://github.com/fedora-infra/fedmsg/commit/e84928a4436c2747dc82c6b0f204a12a60979625>`_
+- Remove unused statement. `57a97d929 <https://github.com/fedora-infra/fedmsg/commit/57a97d9290bf39b47ea3c759ef41479ac39d8ce5>`_
+- Handle multiple topics. `b0dc6632a <https://github.com/fedora-infra/fedmsg/commit/b0dc6632ac207ad2d6a4456630494fee35967069>`_
+- Merge pull request #319 from fedora-infra/feature/handle-multiple-topics `4013d5707 <https://github.com/fedora-infra/fedmsg/commit/4013d57074e38400a76d6251ad96f1ebcd5c7310>`_
+- Scrub args from keywords before initializing. `97e0a0d4e <https://github.com/fedora-infra/fedmsg/commit/97e0a0d4e31e9a541faab3a59bc222837b2ffa7b>`_
+- Merge pull request #321 from fedora-infra/feature/scrub-api-args `06212349a <https://github.com/fedora-infra/fedmsg/commit/06212349a8002bd5fe791efc5a4f4ba9f8078b50>`_
+
+0.12.0
+------
+
+- Try to get tests passing in koji again. `261bf1fcb <https://github.com/fedora-infra/fedmsg/commit/261bf1fcb2ae393e3ef96805e7d7b2f93884f90d>`_
+- Merge pull request #298 from fedora-infra/feature/kojifix `23cb93b30 <https://github.com/fedora-infra/fedmsg/commit/23cb93b304d2bcfab637d888e698c9c9d9e0115c>`_
+- Remove unused imports. `a662519d4 <https://github.com/fedora-infra/fedmsg/commit/a662519d42507673e91f82c8250eafc88dbb8d27>`_
+- Increase the lineRate value to 1.0 `b1d916afc <https://github.com/fedora-infra/fedmsg/commit/b1d916afcf864dd972f6e3567fbf59db1aef3138>`_
+- Merge pull request #301 from ampotty/develop `9dd647091 <https://github.com/fedora-infra/fedmsg/commit/9dd647091995536818a9f9c65ac2a3d977a0753f>`_
+- Merge pull request #300 from fedora-infra/feature/remove-unused `7dcec4973 <https://github.com/fedora-infra/fedmsg/commit/7dcec49735826a68ca7be87364d7546c66e42ad7>`_
+- Docs - rename SERVICE to CATEGORY. `230ecfea5 <https://github.com/fedora-infra/fedmsg/commit/230ecfea5004ef90f386c205a89e72fea4040733>`_
+- Merge pull request #303 from fedora-infra/feature/doc-consistency `4762aa4e3 <https://github.com/fedora-infra/fedmsg/commit/4762aa4e37ea832bb20515f8c084e25d61cea75c>`_
+- Simplify fedmsg-relay usage. `43cfcce75 <https://github.com/fedora-infra/fedmsg/commit/43cfcce75e3ac9e315c32faa8c60fe0487144e81>`_
+- Merge pull request #306 from fedora-infra/feature/simplify-relay-usage `be86874e3 <https://github.com/fedora-infra/fedmsg/commit/be86874e33fa258100bf5ac1eb22e3c386f3168a>`_
+- Documentation for reconnect interval options `036286c6b <https://github.com/fedora-infra/fedmsg/commit/036286c6b131e8c6de22cb233412836b0cbdfaad>`_
+- add comment about repo_name `029beca9b <https://github.com/fedora-infra/fedmsg/commit/029beca9b951b24b8101cecb9e65d21a9d7fc0d4>`_
+- Merge pull request #308 from glensc/fix1 `efd1a282d <https://github.com/fedora-infra/fedmsg/commit/efd1a282d68e8cb6139e8507675bc0f4d5e42934>`_
+- Use the much more awesome pygit2. `c3070966d <https://github.com/fedora-infra/fedmsg/commit/c3070966d71192f811a7d867bbfa4ad136a6eec3>`_
+- Calculate diff stats for fedmsg git hook (pygit2!) `3a0169538 <https://github.com/fedora-infra/fedmsg/commit/3a0169538dd4163a58947bc49117be41d54ec0bd>`_
+- Merge branch 'develop' of git://github.com/ampotty/fedmsg into develop `351e868ce <https://github.com/fedora-infra/fedmsg/commit/351e868cea885721a32c400ab403d394494ef5dc>`_
+- Add reconnect interval options to the glossary for #307. `bda6d860c <https://github.com/fedora-infra/fedmsg/commit/bda6d860c7a97ac020c3381a44f53258275a5562>`_
+- Merge pull request #310 from fedora-infra/feature/pygit2 `b4aafee9f <https://github.com/fedora-infra/fedmsg/commit/b4aafee9fe70c1d4e04c84f11d64d3bd00b7dd75>`_
+- Add a comma here to help out people who modify this file. `ded110e23 <https://github.com/fedora-infra/fedmsg/commit/ded110e2357ea400a64d90822efd43213374cfd4>`_
+- Update the status doc. `40650bdfc <https://github.com/fedora-infra/fedmsg/commit/40650bdfce59bd6d31283fc4624ec548470edfa0>`_
+- Start some more deployment docs. `f548ee135 <https://github.com/fedora-infra/fedmsg/commit/f548ee1351be88152ed754c7f2c45a75ff701fb7>`_
+- Merge pull request #311 from fedora-infra/feature/more-deployment-docs `d1611e2b4 <https://github.com/fedora-infra/fedmsg/commit/d1611e2b40cef2760313b532d053699d457f600b>`_
+- Fix ValueError when using gpg and gpg_home is not set `c1db9c55e <https://github.com/fedora-infra/fedmsg/commit/c1db9c55ee41a92773caf332ff4e8852f966fff1>`_
+- Merge pull request #313 from mbooth101/gpg_home_fix `1ae494016 <https://github.com/fedora-infra/fedmsg/commit/1ae4940162670c2493033406be56a06668fad10b>`_
+- Add list of topics and categories to grouped messages. `9a12837fb <https://github.com/fedora-infra/fedmsg/commit/9a12837fb1a4c1a8a368d621dc4018545e8e1e8f>`_
+- Merge pull request #315 from fedora-infra/feature/more-grouped-attrs `a120d3615 <https://github.com/fedora-infra/fedmsg/commit/a120d361593d50af3223674493256633221d53d1>`_
+- Surface CRL errors. `8399e7ba6 <https://github.com/fedora-infra/fedmsg/commit/8399e7ba621440af78cf40f7ab333014fc1f78ee>`_
+- Merge pull request #316 from fedora-infra/feature/surface-crl-error `25bea70c6 <https://github.com/fedora-infra/fedmsg/commit/25bea70c651971fb22cfe7e2997c0dcd12fe8f5b>`_
+
+0.11.1
+------
+
+- Handle koschei use case for tailing while in active mode. `8b7f2ee61 <https://github.com/fedora-infra/fedmsg/commit/8b7f2ee61d3ff2d5eef1ec61b66be5085972f710>`_
+- Merge pull request #294 from fedora-infra/feature/koschei-use-case `31945e1f4 <https://github.com/fedora-infra/fedmsg/commit/31945e1f4cb2f556d9700259359c180295c195cf>`_
+- BugFix #150 : de-duplicate items in bodhi conglomerator `a1b1ee054 <https://github.com/fedora-infra/fedmsg/commit/a1b1ee0548aa32fb2dadb59fe6cd29d2667c9214>`_
+- Merge pull request #296 from Ghost-script/develop `0a9052931 <https://github.com/fedora-infra/fedmsg/commit/0a9052931d96b1bc4e9f1679f15b5e2c291321f2>`_
+- Remove unused import. `b860c87e8 <https://github.com/fedora-infra/fedmsg/commit/b860c87e8af1764ca0583ad3c8effb81a240f9b8>`_
+- Add some passing test cases. `52c4d40d5 <https://github.com/fedora-infra/fedmsg/commit/52c4d40d52af1276c7fe1a10cba1689b964f8b09>`_
+- Restart services on failure (systemd). `f42861fc9 <https://github.com/fedora-infra/fedmsg/commit/f42861fc93c074408ae96c1b797d4e1f0cab6a7a>`_
+- Merge pull request #297 from fedora-infra/feature/restart-on-failure `d175c5479 <https://github.com/fedora-infra/fedmsg/commit/d175c5479e61d9feaf7c73463b8f83ebdf462985>`_
 
 0.11.0
 ------

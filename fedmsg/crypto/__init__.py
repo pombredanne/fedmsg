@@ -155,8 +155,19 @@ log = logging.getLogger(__name__)
 _implementation = None
 _validate_implementations = None
 
+import six
+
+# For python3, we're in trouble due to M2Crypto - it won't be ported.
+# So we have python-cryptography!  but it only supports what we need for
+# message signing, not message validation.  So, if we're on py3, use the
+# experimental x509 module that can do just that.  Otherwise, use the
+# tried-and-true-but-python2-only module.
+if six.PY3:
+    from . import x509_ng as x509
+else:
+    from . import x509
+
 from . import gpg
-from . import x509
 
 _possible_backends = {
     'gpg': gpg,
@@ -216,14 +227,14 @@ def validate(message, **config):
 
     cfg = copy.deepcopy(config)
     if 'gpg_home' not in cfg:
-        cfg['gpg_honme'] = os.path.expanduser('~/.gnupg/')
+        cfg['gpg_home'] = os.path.expanduser('~/.gnupg/')
 
     if 'ssldir' not in cfg:
         cfg['ssldir'] = '/etc/pki/fedmsg'
 
     if 'crypto' in message:
         if not message['crypto'] in _possible_backends:
-            log.warn("Message specified an unpossible crypto backend")
+            log.warn("Message specified an impossible crypto backend")
             return False
         try:
             backend = _possible_backends[message['crypto']]

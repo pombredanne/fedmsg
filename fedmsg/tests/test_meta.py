@@ -19,6 +19,7 @@
 #
 """ Tests for fedmsg.meta """
 
+import inspect
 import os
 import unittest
 import textwrap
@@ -35,15 +36,30 @@ except ImportError:
 import fedmsg.meta
 
 
+class UnspecifiedType(object):
+    """ A sentinel used to identify which expectations are not specified. """
+    def __str__(self):
+        return "Unspecified"
+
+    def __unicode__(self):
+        return u"Unspecified"
+
+    def __repr__(self):
+        return "Unspecified"
+
+
+Unspecified = UnspecifiedType()
+
+
 def skip_on(attributes):
     """ A test decorator that will skip if any of the named attributes
-    are left unspecified (are None-valued).
+    are left unspecified.
     """
     def wrapper(func):
         @make_decorator(func)
         def inner(self):
             for attr in attributes:
-                if getattr(self, attr) is None:
+                if getattr(self, attr) is Unspecified:
                     raise SkipTest("%r left unspecified" % attr)
             return func(self)
         return inner
@@ -89,6 +105,7 @@ class TestForWarning(unittest.TestCase):
         expected = 'No fedmsg.meta plugins found.  fedmsg.meta.msg2* crippled'
         original = fedmsg.meta.log.warn
         try:
+            fedmsg.meta.processors = []
             fedmsg.meta.log.warn = mocked_warning
             fedmsg.meta.make_processors(**self.config)
             eq_(messages, [expected])
@@ -141,19 +158,21 @@ class TestProcessorRegex(unittest.TestCase):
 
 
 class Base(unittest.TestCase):
-    msg = None
-    expected_title = None
-    expected_subti = None
-    expected_markup = None
-    expected_link = None
-    expected_icon = None
-    expected_secondary_icon = None
-    expected_usernames = None
-    expected_packages = None
-    expected_objects = None
-    expected_emails = None
-    expected_avatars = None
-    expected_long_form = None
+    msg = Unspecified
+    expected_title = Unspecified
+    expected_subti = Unspecified
+    expected_subjective = Unspecified
+    expected_markup = Unspecified
+    expected_link = Unspecified
+    expected_icon = Unspecified
+    expected_secondary_icon = Unspecified
+    expected_usernames = Unspecified
+    expected_agent = Unspecified
+    expected_packages = Unspecified
+    expected_objects = Unspecified
+    expected_emails = Unspecified
+    expected_avatars = Unspecified
+    expected_long_form = Unspecified
 
     def setUp(self):
         dirname = os.path.abspath(os.path.dirname(__file__))
@@ -170,78 +189,104 @@ class Base(unittest.TestCase):
         if not hasattr(self, 'assertMultiLineEqual'):
             self.assertMultiLineEqual = self.assertEqual
 
+    def _equals(self, actual, expected, multiline=False):
+        try:
+            if multiline:
+                self.assertMultiLineEqual(actual, expected)
+            else:
+                self.assertEquals(actual, expected)
+        except:
+            print("Failed at:")
+            print(" ", self)
+            print(" ", os.path.relpath(inspect.getfile(type(self))[:-1]))
+            raise
+
     @skip_on(['msg', 'expected_title'])
     def test_title(self):
         """ Does fedmsg.meta produce the expected title? """
         actual_title = fedmsg.meta.msg2title(self.msg, **self.config)
-        eq_(actual_title, self.expected_title)
+        self._equals(actual_title, self.expected_title)
 
     @skip_on(['msg', 'expected_markup'])
     def test_markup(self):
         """ Does fedmsg.meta produce the right html when markup=True? """
         actual_markup = fedmsg.meta.msg2subtitle(
             self.msg, markup=True, **self.config)
-        eq_(actual_markup, self.expected_markup)
+        self._equals(actual_markup, self.expected_markup)
 
     @skip_on(['msg', 'expected_long_form'])
     def test_long_form(self):
         """ Does fedmsg.meta produce the expected long form text? """
         actual_long_form = fedmsg.meta.msg2long_form(self.msg, **self.config)
-        self.assertMultiLineEqual(actual_long_form, self.expected_long_form)
+        self._equals(actual_long_form, self.expected_long_form, multiline=True)
 
     @skip_on(['msg', 'expected_subti'])
     def test_subtitle(self):
         """ Does fedmsg.meta produce the expected subtitle? """
         actual_subti = fedmsg.meta.msg2subtitle(self.msg, **self.config)
-        eq_(actual_subti, self.expected_subti)
+        self._equals(actual_subti, self.expected_subti)
+
+    @skip_on(['msg', 'expected_subjective'])
+    def test_subjective(self):
+        """ Does fedmsg.meta produce the expected subjective message? """
+        for subject, expected in self.expected_subjective.items():
+            actual_subjective = fedmsg.meta.msg2subjective(
+                self.msg, subject=subject, **self.config)
+            self._equals(actual_subjective, expected)
 
     @skip_on(['msg', 'expected_link'])
     def test_link(self):
         """ Does fedmsg.meta produce the expected link? """
         actual_link = fedmsg.meta.msg2link(self.msg, **self.config)
-        eq_(actual_link, self.expected_link)
+        self._equals(actual_link, self.expected_link)
 
     @skip_on(['msg', 'expected_icon'])
     def test_icon(self):
         """ Does fedmsg.meta produce the expected icon? """
         actual_icon = fedmsg.meta.msg2icon(self.msg, **self.config)
-        eq_(actual_icon, self.expected_icon)
+        self._equals(actual_icon, self.expected_icon)
 
     @skip_on(['msg', 'expected_secondary_icon'])
     def test_secondary_icon(self):
         """ Does fedmsg.meta produce the expected secondary icon? """
         actual_icon = fedmsg.meta.msg2secondary_icon(self.msg, **self.config)
-        eq_(actual_icon, self.expected_secondary_icon)
+        self._equals(actual_icon, self.expected_secondary_icon)
 
     @skip_on(['msg', 'expected_usernames'])
     def test_usernames(self):
         """ Does fedmsg.meta produce the expected list of usernames? """
         actual_usernames = fedmsg.meta.msg2usernames(self.msg, **self.config)
-        eq_(actual_usernames, self.expected_usernames)
+        self._equals(actual_usernames, self.expected_usernames)
+
+    @skip_on(['msg', 'expected_agent'])
+    def test_agent(self):
+        """ Does fedmsg.meta produce the expected agent? """
+        actual_agent = fedmsg.meta.msg2agent(self.msg, **self.config)
+        self._equals(actual_agent, self.expected_agent)
 
     @skip_on(['msg', 'expected_packages'])
     def test_packages(self):
         """ Does fedmsg.meta produce the expected list of packages? """
         actual_packages = fedmsg.meta.msg2packages(self.msg, **self.config)
-        eq_(actual_packages, self.expected_packages)
+        self._equals(actual_packages, self.expected_packages)
 
     @skip_on(['msg', 'expected_objects'])
     def test_objects(self):
         """ Does fedmsg.meta produce the expected list of objects? """
         actual_objects = fedmsg.meta.msg2objects(self.msg, **self.config)
-        eq_(actual_objects, self.expected_objects)
+        self._equals(actual_objects, self.expected_objects)
 
     @skip_on(['msg', 'expected_emails'])
     def test_emails(self):
         """ Does fedmsg.meta produce the expected list of emails? """
         actual_emails = fedmsg.meta.msg2emails(self.msg, **self.config)
-        eq_(actual_emails, self.expected_emails)
+        self._equals(actual_emails, self.expected_emails)
 
     @skip_on(['msg', 'expected_avatars'])
     def test_avatars(self):
         """ Does fedmsg.meta produce the expected list of avatars? """
         actual_avatars = fedmsg.meta.msg2avatars(self.msg, **self.config)
-        eq_(actual_avatars, self.expected_avatars)
+        self._equals(actual_avatars, self.expected_avatars)
 
 
 class TestUnhandled(Base):
@@ -258,6 +303,7 @@ class TestAnnouncement(Base):
     expected_long_form = 'hello, world.'
     expected_link = 'foo'
     expected_usernames = set(['ralph'])
+    expected_agent = 'ralph'
 
     msg = {
         "i": 1,
@@ -275,7 +321,12 @@ class TestLoggerNormal(Base):
     expected_title = "logger.log"
     expected_subti = 'hello, world. (ralph)'
     expected_long_form = 'hello, world. (ralph)'
+    expected_subjective = {
+        'ralph': 'you logged "hello, world."',
+        'lmacken': expected_subti,
+    }
     expected_usernames = set(['ralph'])
+    expected_agent = 'ralph'
 
     msg = {
         "i": 1,
@@ -299,6 +350,7 @@ class TestLoggerJSON(Base):
         }
     """).strip()
     expected_usernames = set(['root'])
+    expected_agent = 'root'
 
     msg = {
         "i": 1,
@@ -312,8 +364,8 @@ class TestLoggerJSON(Base):
 
 
 class ConglomerateBase(unittest.TestCase):
-    originals = None
-    expected = None
+    originals = Unspecified
+    expected = Unspecified
     maxDiff = None
 
     def setUp(self):
@@ -326,11 +378,34 @@ class ConglomerateBase(unittest.TestCase):
         self.config['topic_prefix_re'] = '^org\.fedoraproject\.(dev|stg|prod)'
         fedmsg.meta.make_processors(**self.config)
 
+        # Delete the msg_ids field because it is bulky and I don't want to
+        # bother with testing it (copying and pasting it).
+        if not self.expected is Unspecified:
+            for item in self.expected:
+                if 'msg_ids' in item:
+                    del item['msg_ids']
+
     @skip_on(['originals', 'expected'])
     def test_conglomerate(self):
         """ Does fedmsg.meta produce the expected conglomeration? """
-        actual = fedmsg.meta.conglomerate(self.originals, **self.config)
-        self.assertEquals(actual, self.expected)
+        subject = getattr(self, 'subject', None)
+        actual = fedmsg.meta.conglomerate(
+            self.originals, subject, **self.config)
+
+        # Delete the msg_ids field because it is bulky and I don't want to
+        # bother with testing it (copying and pasting it).
+        if actual:
+            for item in actual:
+                if 'msg_ids' in item:
+                    del item['msg_ids']
+
+        try:
+            self.assertEquals(actual, self.expected)
+        except:
+            print("Failed at:")
+            print(" ", self)
+            print(" ", os.path.relpath(inspect.getfile(type(self))[:-1]))
+            raise
 
 
 class TestConglomeratorExtras(unittest.TestCase):
@@ -346,7 +421,7 @@ class TestConglomeratorExtras(unittest.TestCase):
         self.conglomerator = fedmsg.meta.base.BaseConglomerator
 
     def test_list_to_series_simple(self):
-        original, expected = ['a', 'b', 'c'], "a, c, and b"
+        original, expected = ['a', 'b', 'c'], "a, b, and c"
         result = self.conglomerator.list_to_series(original)
         eq_(result, expected)
 

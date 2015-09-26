@@ -22,7 +22,16 @@ import abc
 import re
 import time
 
-import arrow
+import six
+
+
+def add_metaclass(metaclass):
+    """ Compat shim for el7. """
+    if hasattr(six, 'add_metaclass'):
+        return six.add_metaclass(metaclass)
+    else:
+        # Do nothing.  It's not worth it.
+        return lambda klass: klass
 
 
 class BaseProcessor(object):
@@ -107,8 +116,23 @@ class BaseProcessor(object):
             'human_time': '5 minutes ago',
             'usernames': ['relrod'],
             'packages': ['ghc', 'nethack', ... ],
-            'msg_ids': ['2014-abcde', '2014-bcdef', '2014-cdefg', ... ],
-          },
+            'topics': ['org.fedoraproject.prod.git.receive'],
+            'categories': ['git'],
+            'msg_ids': {
+                '2014-abcde': {
+                    'subtitle': 'relrod pushed some commits to ghc',
+                    'title': 'git.receive',
+                    'link': 'http://...',
+                    'icon': 'http://...',
+                },
+                '2014-bcdef': {
+                    'subtitle': 'relrod pushed some commits to nethack',
+                    'title': 'git.receive',
+                    'link': 'http://...',
+                    'icon': 'http://...',
+                },
+            },
+          }
 
         The telltale sign that an entry in a list of messages represents a
         conglomerate message is the presence of the plural ``msg_ids`` field.
@@ -136,6 +160,10 @@ class BaseProcessor(object):
         """ Return a "subtitle" for the message. """
         return ""
 
+    def subjective(self, msg, subject, **config):
+        """ Return a "subjective" subtitle for the message. """
+        return ""
+
     def long_form(self, msg, **config):
         """ Return some paragraphs of text about a message. """
         return ""
@@ -155,6 +183,12 @@ class BaseProcessor(object):
         """ Return a set of FAS usernames associated with a message. """
         return set()
 
+    # XXX - this is intentionally not stubbed out at the 'base' level of the
+    # class inheritance hierarchy.  In fedmsg/meta/__init__.py, we check for
+    # the existance of this method on the subclass and do something special if
+    # it is absent (if it is unimplemented by the subclass).
+    agent = NotImplemented
+
     def packages(self, msg, **config):
         """ Return a set of package names associated with a message. """
         return set()
@@ -172,6 +206,7 @@ class BaseProcessor(object):
         return dict()
 
 
+@add_metaclass(abc.ABCMeta)
 class BaseConglomerator(object):
     """ Base Conglomerator.  This abstract base class must be extended.
 
@@ -187,13 +222,11 @@ class BaseConglomerator(object):
     This BaseConglomerator is meant to be extended many times over to provide
     plugins that know how to conglomerate different combinations of messages.
     """
-    __metaclass__ = abc.ABCMeta
-
     def __init__(self, processor, internationalization_callable, **conf):
         self.processor = processor
         self._ = internationalization_callable
 
-    def conglomerate(self, messages, **conf):
+    def conglomerate(self, messages, subject=None, **conf):
         """ Top-level API entry point.  Given a list of messages, transform it
         into a list of conglomerates where possible.
         """
@@ -201,7 +234,7 @@ class BaseConglomerator(object):
         while constituents:
             for idx in reversed(indices):
                 messages.pop(idx)
-            messages.insert(idx, self.merge(constituents, **conf))
+            messages.insert(idx, self.merge(constituents, subject, **conf))
             indices, constituents = self.select_constituents(messages, **conf)
 
         return messages
@@ -237,7 +270,8 @@ class BaseConglomerator(object):
         # If we're done, we're done.
         return None, None
 
-    def produce_template(self, constituents, **config):
+    @classmethod
+    def produce_template(cls, constituents, subject, **config):
         """ Helper function used by `merge`.
         Produces the beginnings of a merged conglomerate message that needs to
         be later filled out by a subclass.
@@ -251,22 +285,46 @@ class BaseConglomerator(object):
         timestamps = [_extract_timestamp(msg) for msg in constituents]
         average_timestamp = sum(timestamps) / N
 
+        # Avoid circular import
+        import fedmsg.meta as fm
+        # Optional, so, avoid importing it at the topmost level
+        import arrow
+
         usernames = set(sum([
-            list(self.processor.usernames(msg, **config))
+            list(fm.msg2usernames(msg, **config))
             for msg in constituents], []))
         packages = set(sum([
-            list(self.processor.packages(msg, **config))
+            list(fm.msg2packages(msg, **config))
             for msg in constituents], []))
+        topics = set([msg['topic'] for msg in constituents])
+        categories = set([t.split('.')[3] for t in topics])
+
+        # Include metadata about constituent messages in the aggregate
+        # http://da.gd/12Eso
+        msg_ids = dict([
+            (msg['msg_id'], {
+                'title': fm.msg2title(msg, **config),
+                'subtitle': fm.msg2subtitle(msg, **config),
+                'subjective': fm.msg2subjective(msg, subject=subject, **config),
+                'link': fm.msg2link(msg, **config),
+                'icon': fm.msg2icon(msg, **config),
+                'secondary_icon': fm.msg2secondary_icon(msg, **config),
+                'usernames': fm.msg2usernames(msg, **config),
+                'packages': fm.msg2packages(msg, **config),
+                'objects': fm.msg2objects(msg, **config),
+            }) for msg in constituents])
 
         return {
             'start_time': min(timestamps),
             'end_time': max(timestamps),
             'timestamp': average_timestamp,
             'human_time': arrow.get(average_timestamp).humanize(),
-            'msg_ids': [msg['msg_id'] for msg in constituents],
+            'msg_ids': msg_ids,
             'usernames': usernames,
             'packages': packages,
-            'icon': self.processor.__icon__,
+            'topics': topics,
+            'categories': categories,
+            'icon': fm.msg2icon(constituents[0], **config),
         }
 
     @staticmethod
@@ -283,7 +341,8 @@ class BaseConglomerator(object):
         if not items:
             return "(nothing)"
 
-        items = list(set(items))
+        # uniqify items + sort them to have predictable (==testable) ordering
+        items = list(sorted(set(items)))
 
         if len(items) == 1:
             return items[0]
@@ -310,6 +369,6 @@ class BaseConglomerator(object):
         pass
 
     @abc.abstractmethod
-    def merge(self, constituents, **config):
+    def merge(self, constituents, subject, **config):
         """ Given N presumably matching messages, return one merged message """
         pass
