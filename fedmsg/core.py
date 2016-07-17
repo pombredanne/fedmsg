@@ -47,6 +47,12 @@ from fedmsg.replay import check_for_replay
 import logging
 
 
+class ValidationError(Exception):
+    """ Error used internally to represent a validation failure. """
+    def __init__(self, msg):
+        self.msg = msg
+
+
 class FedMsgContext(object):
     # A counter for messages sent.
     _i = 0
@@ -359,7 +365,7 @@ class FedMsgContext(object):
 
                 # OK, sanity checks pass.  Create the subscriber and connect.
                 subscriber = self.context.socket(zmq.SUB)
-                subscriber.setsockopt(zmq.SUBSCRIBE, topic)
+                subscriber.setsockopt(zmq.SUBSCRIBE, topic.encode('utf-8'))
 
                 set_high_water_mark(subscriber, self.c)
                 set_tcp_keepalive(subscriber, self.c)
@@ -387,7 +393,10 @@ class FedMsgContext(object):
             sockets = dict(poller.poll())
             for s in sockets:
                 name, ep = subs[s]
-                yield self._run_socket(s, name, ep, watched_names=watched_names)
+                try:
+                    yield self._run_socket(s, name, ep, watched_names)
+                except ValidationError as e:
+                    warnings.warn("!! invalid message received: %r" % e.msg)
 
     def _run_socket(self, sock, name, ep, watched_names=None):
         if watched_names is None:
@@ -395,8 +404,15 @@ class FedMsgContext(object):
 
         validate = self.c.get('validate_signatures', False)
 
+        # Grab the data off the zeromq internal queue
         _topic, message = sock.recv_multipart()
+
+        # zmq hands us byte strings, so let's convert to unicode asap
+        _topic, message = _topic.decode('utf-8'), message.decode('utf-8')
+
+        # Now, decode the JSON body into a dict.
         msg = fedmsg.encoding.loads(message)
+
         if not validate or fedmsg.crypto.validate(msg, **self.c):
             # If there is even a slight change of replay, use
             # check_for_replay
@@ -410,16 +426,11 @@ class FedMsgContext(object):
                             fedmsg.crypto.validate(m, **self.c):
                         return name, ep, m['topic'], m
                     else:
-                        warnings.warn("!! invalid message " +
-                                      "received: %r" % msg)
+                        raise ValidationError(msg)
             else:
                 return name, ep, _topic, msg
         else:
-            # Else.. we are supposed to be validating, but the
-            # message failed validation.
-
-            # Warn, but don't throw an exception.  Keep tailing.
-            warnings.warn("!! invalid message received: %r" % msg)
+            raise ValidationError(msg)
 
     def _close_subs(self, subs):
             for subscriber in subs:

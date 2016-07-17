@@ -1,4 +1,122 @@
 
+0.17.2
+------
+
+Pull Requests
+
+- (@glensc)         #369, irc: default color configurable
+  https://github.com/fedora-infra/fedmsg/pull/369
+- (@glensc)         #368, Update ircbot.py
+  https://github.com/fedora-infra/fedmsg/pull/368
+
+Commits
+
+- b637e253a Update ircbot.py
+  https://github.com/fedora-infra/fedmsg/commit/b637e253a
+- 9b406fdfc irc: default color configurable
+  https://github.com/fedora-infra/fedmsg/commit/9b406fdfc
+- 2d6bf7c6c add default_color to sample config
+  https://github.com/fedora-infra/fedmsg/commit/2d6bf7c6c
+- c41199dcb fix key name
+  https://github.com/fedora-infra/fedmsg/commit/c41199dcb
+- 03ac8c4c3 Merge branch 'develop' of github.com:fedora-infra/fedmsg into develop
+  https://github.com/fedora-infra/fedmsg/commit/03ac8c4c3
+
+0.17.1
+------
+
+Commits
+
+- a0e7530c8 Pygments changed output.. but thats okay.
+  https://github.com/fedora-infra/fedmsg/commit/a0e7530c8
+
+0.17.0
+------
+
+Pull Requests
+
+- (@AdamWill)       #364, instead of setsockopt_string, encode topic and use setsockopt
+  https://github.com/fedora-infra/fedmsg/pull/364
+- (@ralphbean)      #366, Add long_form metadata to the constituents of a grouped event.
+  https://github.com/fedora-infra/fedmsg/pull/366
+- (@ralphbean)      #367, Add the possibility to associate a pygments lexer with a message.
+  https://github.com/fedora-infra/fedmsg/pull/367
+
+Commits
+
+- 63f6c11c4 instead of setsockopt_string, encode topic and use setsockopt
+  https://github.com/fedora-infra/fedmsg/commit/63f6c11c4
+- cd9dc763e 0.16.4
+  https://github.com/fedora-infra/fedmsg/commit/cd9dc763e
+- be00d8756 Add long_form metadata to the constituents of a grouped event.
+  https://github.com/fedora-infra/fedmsg/commit/be00d8756
+- 5bd72ffbe Add the possibility to associate a pygments lexer with a message.
+  https://github.com/fedora-infra/fedmsg/commit/5bd72ffbe
+
+0.16.4
+------
+
+Pull Requests
+
+- (@AdamWill)       #364, instead of setsockopt_string, encode topic and use setsockopt
+  https://github.com/fedora-infra/fedmsg/pull/364
+
+Commits
+
+- 63f6c11c4 instead of setsockopt_string, encode topic and use setsockopt
+  https://github.com/fedora-infra/fedmsg/commit/63f6c11c4
+
+0.16.3
+------
+
+Primarily, some python3 fixes for fedmsg.tail_messages() in here.
+
+Pull Requests
+
+- (@ralphbean)      #357, Stick with alternative cache location.
+  https://github.com/fedora-infra/fedmsg/pull/357
+- (@ralphbean)      #358, Remove markup stuff.
+  https://github.com/fedora-infra/fedmsg/pull/358
+- (@ralphbean)      #359, Simpler times call for simpler docs.
+  https://github.com/fedora-infra/fedmsg/pull/359
+- (@AdamWill)       #360, use setsockopt_string when setting a string as the option
+  https://github.com/fedora-infra/fedmsg/pull/360
+- (@ralphbean)      #363, Decode bytes as soon as we recv them.
+  https://github.com/fedora-infra/fedmsg/pull/363
+
+Commits
+
+- b10f8ea7e Stick with alternative cache location.
+  https://github.com/fedora-infra/fedmsg/commit/b10f8ea7e
+- bd881913a Remove markup stuff.
+  https://github.com/fedora-infra/fedmsg/commit/bd881913a
+- 0c773b133 Simpler times call for simpler docs.
+  https://github.com/fedora-infra/fedmsg/commit/0c773b133
+- 1f1db11f8 use setsockopt_string when setting a string as the option
+  https://github.com/fedora-infra/fedmsg/commit/1f1db11f8
+- 27617f55c Decode bytes as soon as we recv them.
+  https://github.com/fedora-infra/fedmsg/commit/27617f55c
+
+0.16.2
+------
+
+This release fixes a couple of errors that periodically get raised from calls
+to `fedmsg.tail_messages(...)`.
+
+Pull Requests
+
+- (@ralphbean)      #354, Try three times to get the CRL.
+  https://github.com/fedora-infra/fedmsg/pull/354
+- (@ralphbean)      #356, Stop yielding None values from fedmsg.tail_messages.
+  https://github.com/fedora-infra/fedmsg/pull/356
+
+Commits
+
+- ecf7f30be Try three times to get the CRL.
+  https://github.com/fedora-infra/fedmsg/commit/ecf7f30be
+- 2bf4bfb6f Stop yielding None values from fedmsg.tail_messages.
+  https://github.com/fedora-infra/fedmsg/commit/2bf4bfb6f
+
 0.16.1
 ------
 
